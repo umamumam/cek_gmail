@@ -11,6 +11,7 @@
       :historyCount="checkHistory.length"
       :changesCount="statusChangeLogs.length"
       :ledgerCount="emailLedger.length"
+      :passwordCount="emailLedger.filter(l => l.password).length"
       @navigate="handleNavigate" />
 
     <!-- Mobile Sidebar Drawer -->
@@ -32,6 +33,7 @@
             :historyCount="checkHistory.length"
             :changesCount="statusChangeLogs.length"
             :ledgerCount="emailLedger.length"
+            :passwordCount="emailLedger.filter(l => l.password).length"
             @navigate="handleNavigate"
             @closeMobileMenu="isMobileMenuOpen = false" />
         </div>
@@ -114,6 +116,14 @@
             @clearLedger="clearLedger"
             @bulkSetor="bulkSetorLedger" />
 
+          <!-- Tab 5: Daftar Password & Vault -->
+          <PasswordVaultView
+            v-if="activeTab === 'passwords'"
+            :ledger="emailLedger"
+            @updateLedgerRow="updateLedgerRow"
+            @deleteLedgerEmail="deleteLedgerEmail"
+            @verifySingleInLedger="verifySingleInLedger" />
+
           <!-- Tab 5: Developer API Guide -->
           <DeveloperApiView
             v-if="activeTab === 'api'"
@@ -186,6 +196,7 @@ import CekEmailView from './components/CekEmailView.vue';
 import RiwayatView from './components/RiwayatView.vue';
 import PerubahanView from './components/PerubahanView.vue';
 import CatatanEmailView from './components/CatatanEmailView.vue';
+import PasswordVaultView from './components/PasswordVaultView.vue';
 import DeveloperApiView from './components/DeveloperApiView.vue';
 import DetailSlideOver from './components/DetailSlideOver.vue';
 
@@ -239,6 +250,7 @@ const tabTitle = computed(() => {
     case 'riwayat': return 'Riwayat Email Terverifikasi';
     case 'perubahan': return 'Riwayat Perubahan Status Email';
     case 'ledger': return 'Catatan Email (Ledger)';
+    case 'passwords': return 'Daftar Password & Vault Akun';
     case 'api': return 'Developer API & Integration';
     default: return 'CekGmail';
   }
@@ -251,6 +263,7 @@ const tabDescription = computed(() => {
     case 'riwayat': return 'Daftar riwayat seluruh email yang pernah diperiksa dalam sistem.';
     case 'perubahan': return 'Log otomatis saat status email berubah dari Die ke Live atau sebaliknya.';
     case 'ledger': return 'Pencatatan email unik yang sudah Anda setor maupun belum disetor.';
+    case 'passwords': return 'Kelola kredensial email dan password Anda dalam bentuk kartu interaktif.';
     case 'api': return 'Dokumentasi REST API dan generator kode integrasi untuk pengembang.';
     default: return '';
   }
