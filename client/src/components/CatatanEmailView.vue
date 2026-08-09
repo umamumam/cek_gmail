@@ -119,9 +119,12 @@
           </button>
 
           <button
-            @click="exportLedgerCsv"
-            class="px-3 py-1.5 rounded-xl text-xs btn-secondary cursor-pointer">
-            Ekspor CSV
+            @click="exportLedgerExcel"
+            class="px-3 py-1.5 rounded-xl text-xs btn-secondary cursor-pointer flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            Ekspor Excel
           </button>
 
           <button
@@ -250,6 +253,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import * as XLSX from 'xlsx';
 
 const props = defineProps({
   ledger: { type: Array, default: () => [] }
@@ -392,23 +396,34 @@ function getStatusDotClass(status) {
   }
 }
 
-function exportLedgerCsv() {
+function exportLedgerExcel() {
   if (props.ledger.length === 0) return;
-  const headers = ['Email', 'Status Setor', 'Tgl Setor', 'Verify Status', 'Last Updated'];
-  const rows = props.ledger.map(l => [
-    `"${l.email}"`,
-    `"${l.setorStatus === 'disetor' ? 'Sudah Disetor' : 'Belum Disetor'}"`,
-    `"${l.tglSetor || '-'}"`,
-    `"${l.verifyStatus || 'unchecked'}"`,
-    `"${l.updatedAt || ''}"`
-  ]);
 
-  const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
-  const link = document.createElement('a');
-  link.setAttribute('href', encodeURI(csvContent));
-  link.setAttribute('download', `catatan_email_ledger_${new Date().toISOString().slice(0, 10)}.csv`);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  const data = props.ledger.map((l, idx) => ({
+    'No': idx + 1,
+    'Email': l.email,
+    'Status Setor': l.setorStatus === 'disetor' ? 'Sudah Disetor' : 'Belum Disetor',
+    'Tanggal Setor': l.tglSetor || '-',
+    'Verify Status': l.verifyStatus ? l.verifyStatus.toUpperCase() : 'UNCHECKED',
+    'Terakhir Diperbarui': l.updatedAt || '-'
+  }));
+
+  const worksheet = XLSX.utils.json_to_sheet(data);
+
+  // Set column widths for optimal view in Excel
+  worksheet['!cols'] = [
+    { wch: 6 },
+    { wch: 32 },
+    { wch: 18 },
+    { wch: 20 },
+    { wch: 16 },
+    { wch: 22 }
+  ];
+
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Catatan Email');
+
+  const fileName = `catatan_email_ledger_${new Date().toISOString().slice(0, 10)}.xlsx`;
+  XLSX.writeFile(workbook, fileName);
 }
 </script>

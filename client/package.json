@@ -11,7 +11,8 @@
   "dependencies": {
     "cek-gmail-hygiene-tool": "file:..",
     "lucide-vue-next": "^0.344.0",
-    "vue": "^3.4.21"
+    "vue": "^3.4.21",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.0",
