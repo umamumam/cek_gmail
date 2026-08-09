@@ -238,6 +238,14 @@
             <option value="akun_ortu">👨‍👩‍👧 Set Akun Ortu</option>
           </select>
 
+          <!-- Bulk Password Modifier -->
+          <button
+            @click="handleBatchPassword"
+            :disabled="selectedEmails.length === 0"
+            class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition cursor-pointer disabled:opacity-40 flex items-center gap-1">
+            <span>🔑 Ubah Password ({{ selectedEmails.length }})</span>
+          </button>
+
           <button
             @click="$emit('checkSelectedLedger', selectedEmails)"
             :disabled="selectedEmails.length === 0"
@@ -612,6 +620,26 @@ function handleBatchKeterangan(newStatus) {
         ...row,
         setorStatus: newStatus,
         tglSetor: targetDate || row.tglSetor,
+        updatedAt: getFormattedDate(),
+      });
+    }
+  });
+}
+
+function handleBatchPassword() {
+  if (selectedEmails.value.length === 0) return;
+  const newPass = prompt(
+    `Masukkan password baru untuk ${selectedEmails.value.length} email terpilih:`,
+    ""
+  );
+  if (newPass === null) return;
+
+  selectedEmails.value.forEach((emailStr) => {
+    const row = props.ledger.find((l) => l.email === emailStr);
+    if (row) {
+      emit("updateLedgerRow", {
+        ...row,
+        password: newPass.trim(),
         updatedAt: getFormattedDate(),
       });
     }
