@@ -580,27 +580,33 @@ function getFormattedDate() {
 }
 
 // Ledger Operations
-function addLedgerEmails(rawText, defaultSetor) {
+function addLedgerEmails(rawText, defaultSetor = 'siap_setor', customDate = null) {
   const list = extractEmails(rawText);
   let addedCount = 0;
   const nowStr = getFormattedDate();
-  const isSetor = defaultSetor === 'disetor';
 
   list.forEach(email => {
     const cleanEmail = email.toLowerCase().trim();
     const idx = emailLedger.value.findIndex(l => l.email === cleanEmail);
+    let tgl = null;
+    if (defaultSetor === 'setor_tgl') {
+      tgl = customDate || nowStr;
+    } else if (defaultSetor === 'sudah_setor' || defaultSetor === 'disetor') {
+      tgl = nowStr;
+    }
+
     if (idx === -1) {
       emailLedger.value.unshift({
         email: cleanEmail,
-        setorStatus: defaultSetor || 'belum_disetor',
-        tglSetor: isSetor ? nowStr : null,
+        setorStatus: defaultSetor,
+        tglSetor: tgl,
         verifyStatus: 'unchecked',
         updatedAt: nowStr
       });
       addedCount++;
     } else {
       emailLedger.value[idx].setorStatus = defaultSetor;
-      if (isSetor) emailLedger.value[idx].tglSetor = nowStr;
+      if (tgl) emailLedger.value[idx].tglSetor = tgl;
       emailLedger.value[idx].updatedAt = nowStr;
     }
   });

@@ -2,29 +2,35 @@
   <div class="space-y-6">
     
     <!-- Top Ledger Stats Summary -->
-    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-      <div class="saas-card p-5">
-        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Total Email Ledger</span>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+      <div class="saas-card p-4">
+        <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Total Ledger</span>
         <span class="text-2xl font-black text-slate-900 font-mono mt-1 block">{{ ledger.length }}</span>
-        <span class="text-[11px] text-slate-400">Database email unik tersimpan</span>
+        <span class="text-[10px] text-slate-400">Database email unik</span>
       </div>
 
-      <div class="saas-card p-5 border-l-4 border-l-amber-500">
-        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Belum Disetor</span>
-        <span class="text-2xl font-black text-amber-700 font-mono mt-1 block">{{ pendingCount }}</span>
-        <span class="text-[11px] text-amber-600 font-semibold">Menunggu setoran</span>
+      <div class="saas-card p-4 border-l-4 border-l-blue-500">
+        <span class="text-[11px] font-bold text-blue-700 uppercase tracking-wider block">Siap Setor</span>
+        <span class="text-2xl font-black text-blue-700 font-mono mt-1 block">{{ siapSetorCount }}</span>
+        <span class="text-[10px] text-blue-600 font-semibold">Siap diproses</span>
       </div>
 
-      <div class="saas-card p-5 border-l-4 border-l-emerald-500">
-        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Sudah Disetor</span>
-        <span class="text-2xl font-black text-emerald-700 font-mono mt-1 block">{{ submittedCount }}</span>
-        <span class="text-[11px] text-emerald-600 font-semibold">Telah disetorkan</span>
+      <div class="saas-card p-4 border-l-4 border-l-indigo-500">
+        <span class="text-[11px] font-bold text-indigo-700 uppercase tracking-wider block">Setor Tgl...</span>
+        <span class="text-2xl font-black text-indigo-700 font-mono mt-1 block">{{ setorTglCount }}</span>
+        <span class="text-[10px] text-indigo-600 font-semibold">Jadwal tanggal</span>
       </div>
 
-      <div class="saas-card p-5 border-l-4 border-l-blue-600">
-        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Verified Live (Synced)</span>
-        <span class="text-2xl font-black text-blue-700 font-mono mt-1 block">{{ liveInLedgerCount }}</span>
-        <span class="text-[11px] text-blue-600 font-semibold">Status email aktif</span>
+      <div class="saas-card p-4 border-l-4 border-l-emerald-500">
+        <span class="text-[11px] font-bold text-emerald-700 uppercase tracking-wider block">Sudah Setor</span>
+        <span class="text-2xl font-black text-emerald-700 font-mono mt-1 block">{{ sudahSetorCount }}</span>
+        <span class="text-[10px] text-emerald-600 font-semibold">Telah disetorkan</span>
+      </div>
+
+      <div class="saas-card p-4 border-l-4 border-l-purple-500">
+        <span class="text-[11px] font-bold text-purple-700 uppercase tracking-wider block">Akun Ortu</span>
+        <span class="text-2xl font-black text-purple-700 font-mono mt-1 block">{{ akunOrtuCount }}</span>
+        <span class="text-[10px] text-purple-600 font-semibold">Kategori akun ortu</span>
       </div>
     </div>
 
@@ -34,9 +40,9 @@
         <div>
           <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-            Tambah Catatan Email Baru (Unique List)
+            Tambah Catatan Email Baru & Keterangan
           </h3>
-          <p class="text-xs text-slate-500">Masukkan daftar email (pisahkan per baris). Email duplikat akan otomatis dieliminasi.</p>
+          <p class="text-xs text-slate-500">Masukkan daftar email (pisahkan per baris). Pilih status keterangan default di sebelah kanan.</p>
         </div>
 
         <span class="px-3 py-1 bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold rounded-lg">
@@ -54,14 +60,27 @@
         </div>
 
         <div class="flex flex-col justify-between space-y-2">
-          <div>
-            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Status Setor Default:</label>
-            <select
-              v-model="defaultSetorStatus"
-              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500">
-              <option value="belum_disetor">Belum Disetor</option>
-              <option value="disetor">Sudah Disetor</option>
-            </select>
+          <div class="space-y-2">
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Keterangan Default:</label>
+              <select
+                v-model="defaultSetorStatus"
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500">
+                <option value="siap_setor">🔵 Siap Setor</option>
+                <option value="setor_tgl">📅 Setor Tgl...</option>
+                <option value="sudah_setor">✅ Sudah Setor</option>
+                <option value="akun_ortu">👨‍👩‍👧 Akun Ortu</option>
+              </select>
+            </div>
+
+            <!-- Date picker input if Setor Tgl selected -->
+            <div v-if="defaultSetorStatus === 'setor_tgl'">
+              <label class="block text-[10px] font-bold text-indigo-600 uppercase mb-1">Pilih Tanggal:</label>
+              <input
+                v-model="customInputDate"
+                type="date"
+                class="w-full bg-white border border-indigo-200 rounded-xl px-2.5 py-1.5 text-xs text-indigo-900 font-semibold focus:outline-none focus:border-indigo-500" />
+            </div>
           </div>
 
           <button
@@ -69,7 +88,7 @@
             :disabled="!newEmailsText.trim()"
             class="w-full py-2.5 px-4 rounded-xl font-bold text-xs btn-primary cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            <span>Tambahkan Ke Ledger</span>
+            <span>Simpan Ke Ledger</span>
           </button>
         </div>
       </div>
@@ -103,19 +122,25 @@
             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           </div>
 
-          <button
-            @click="setorSelectedEmails"
-            :disabled="selectedEmails.length === 0"
-            class="px-3 py-1.5 rounded-xl text-xs font-bold btn-emerald cursor-pointer disabled:opacity-40 flex items-center gap-1">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            <span>Setorkan Terpilih ({{ selectedEmails.length }})</span>
-          </button>
+          <!-- Bulk Keterangan Selector -->
+          <div class="relative inline-block">
+            <select
+              @change="handleBatchKeterangan($event.target.value); $event.target.value = ''"
+              :disabled="selectedEmails.length === 0"
+              class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition cursor-pointer disabled:opacity-40 focus:outline-none">
+              <option value="" disabled selected>Ubah Keterangan ({{ selectedEmails.length }}) ▼</option>
+              <option value="siap_setor">🔵 Set Siap Setor</option>
+              <option value="setor_tgl">📅 Set Setor Tgl...</option>
+              <option value="sudah_setor">✅ Set Sudah Setor</option>
+              <option value="akun_ortu">👨‍👩‍👧 Set Akun Ortu</option>
+            </select>
+          </div>
 
           <button
             @click="$emit('checkSelectedLedger', selectedEmails)"
             :disabled="selectedEmails.length === 0"
             class="px-3 py-1.5 rounded-xl text-xs font-bold btn-primary cursor-pointer disabled:opacity-40">
-            Cek Terpilih
+            Cek Terpilih ({{ selectedEmails.length }})
           </button>
 
           <button
@@ -149,10 +174,10 @@
                   class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer" />
               </th>
               <th class="py-3 px-4">Email Address</th>
-              <th class="py-3 px-4">Status Setor</th>
-              <th class="py-3 px-4">Tgl Setor</th>
+              <th class="py-3 px-4">Keterangan / Status</th>
+              <th class="py-3 px-4">Tanggal Setor</th>
               <th class="py-3 px-4">Hasil Live Check</th>
-              <th class="py-3 px-4 text-right">Aksi Setor & Live Check</th>
+              <th class="py-3 px-4 text-right">Aksi & Live Check</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-200/70 font-sans">
@@ -176,18 +201,32 @@
                 <div class="font-semibold text-slate-900 font-mono">{{ row.email }}</div>
               </td>
 
-              <!-- Status Setor Badge -->
+              <!-- Keterangan Status Dropdown Selector -->
               <td class="py-3.5 px-4">
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border"
-                  :class="row.setorStatus === 'disetor' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-amber-50 text-amber-700 border-amber-200'">
-                  <span class="w-1.5 h-1.5 rounded-full" :class="row.setorStatus === 'disetor' ? 'bg-emerald-500' : 'bg-amber-500'"></span>
-                  <span>{{ row.setorStatus === 'disetor' ? 'Sudah Disetor' : 'Belum Disetor' }}</span>
-                </span>
+                <div class="flex items-center gap-1.5">
+                  <select
+                    :value="row.setorStatus || 'siap_setor'"
+                    @change="handleRowStatusChange(row, $event.target.value)"
+                    class="px-2.5 py-1 rounded-full text-xs font-bold border cursor-pointer focus:outline-none transition"
+                    :class="getKeteranganBadgeClass(row.setorStatus)">
+                    <option value="siap_setor" class="bg-white text-slate-800">🔵 Siap Setor</option>
+                    <option value="setor_tgl" class="bg-white text-slate-800">📅 Setor Tgl...</option>
+                    <option value="sudah_setor" class="bg-white text-slate-800">✅ Sudah Setor</option>
+                    <option value="akun_ortu" class="bg-white text-slate-800">👨‍👩‍👧 Akun Ortu</option>
+                  </select>
+                </div>
               </td>
 
-              <!-- Tanggal Disetor -->
+              <!-- Tanggal Disetor / Custom Date Input -->
               <td class="py-3.5 px-4 font-mono text-slate-600">
-                <div v-if="row.setorStatus === 'disetor' && row.tglSetor" class="flex items-center gap-1 text-emerald-700 font-semibold">
+                <div v-if="row.setorStatus === 'setor_tgl'" class="flex items-center gap-1">
+                  <input
+                    type="date"
+                    :value="formatInputDate(row.tglSetor)"
+                    @change="handleRowDateChange(row, $event.target.value)"
+                    class="bg-indigo-50/60 border border-indigo-200 rounded-lg px-2 py-0.5 text-xs text-indigo-900 font-semibold focus:outline-none focus:bg-white focus:border-indigo-500" />
+                </div>
+                <div v-else-if="(row.setorStatus === 'disetor' || row.setorStatus === 'sudah_setor') && row.tglSetor" class="flex items-center gap-1 text-emerald-700 font-semibold">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                   <span>{{ row.tglSetor }}</span>
                 </div>
@@ -202,23 +241,8 @@
                 </span>
               </td>
 
-              <!-- Action Row: Setorkan Button + Cek Live + Delete -->
+              <!-- Action Row: Cek Live + Delete -->
               <td class="py-3.5 px-4 text-right space-x-1.5">
-                <!-- Aksi Setor Button -->
-                <button
-                  v-if="row.setorStatus !== 'disetor'"
-                  @click="markAsSetor(row)"
-                  class="px-3 py-1 rounded-lg text-xs btn-emerald cursor-pointer inline-flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                  <span>Setorkan</span>
-                </button>
-                <button
-                  v-else
-                  @click="cancelSetor(row)"
-                  class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white border border-slate-300 text-slate-600 hover:bg-slate-100 transition cursor-pointer">
-                  Batal Setor
-                </button>
-
                 <button
                   @click="$emit('verifySingleInLedger', row.email)"
                   class="px-2.5 py-1 rounded-lg text-xs btn-primary cursor-pointer">
@@ -270,28 +294,37 @@ const emit = defineEmits([
 ]);
 
 const newEmailsText = ref('');
-const defaultSetorStatus = ref('belum_disetor');
+const defaultSetorStatus = ref('siap_setor');
+const customInputDate = ref(new Date().toISOString().slice(0, 10));
 const activeFilter = ref('all');
 const searchQuery = ref('');
 const selectedEmails = ref([]);
 
 const filterTabs = [
   { label: 'Semua Ledger', value: 'all' },
-  { label: 'Belum Disetor', value: 'belum_disetor' },
-  { label: 'Sudah Disetor', value: 'disetor' },
+  { label: 'Siap Setor', value: 'siap_setor' },
+  { label: 'Setor Tgl', value: 'setor_tgl' },
+  { label: 'Sudah Setor', value: 'sudah_setor' },
+  { label: 'Akun Ortu', value: 'akun_ortu' },
   { label: 'Live Verified', value: 'live' }
 ];
 
-const pendingCount = computed(() => props.ledger.filter(l => l.setorStatus === 'belum_disetor').length);
-const submittedCount = computed(() => props.ledger.filter(l => l.setorStatus === 'disetor').length);
+const siapSetorCount = computed(() => props.ledger.filter(l => l.setorStatus === 'siap_setor' || l.setorStatus === 'belum_disetor' || !l.setorStatus).length);
+const setorTglCount = computed(() => props.ledger.filter(l => l.setorStatus === 'setor_tgl').length);
+const sudahSetorCount = computed(() => props.ledger.filter(l => l.setorStatus === 'sudah_setor' || l.setorStatus === 'disetor').length);
+const akunOrtuCount = computed(() => props.ledger.filter(l => l.setorStatus === 'akun_ortu').length);
 const liveInLedgerCount = computed(() => props.ledger.filter(l => l.verifyStatus === 'live').length);
 
 const filteredLedger = computed(() => {
   let list = props.ledger;
-  if (activeFilter.value === 'belum_disetor') {
-    list = list.filter(l => l.setorStatus === 'belum_disetor');
-  } else if (activeFilter.value === 'disetor') {
-    list = list.filter(l => l.setorStatus === 'disetor');
+  if (activeFilter.value === 'siap_setor') {
+    list = list.filter(l => l.setorStatus === 'siap_setor' || l.setorStatus === 'belum_disetor' || !l.setorStatus);
+  } else if (activeFilter.value === 'setor_tgl') {
+    list = list.filter(l => l.setorStatus === 'setor_tgl');
+  } else if (activeFilter.value === 'sudah_setor') {
+    list = list.filter(l => l.setorStatus === 'sudah_setor' || l.setorStatus === 'disetor');
+  } else if (activeFilter.value === 'akun_ortu') {
+    list = list.filter(l => l.setorStatus === 'akun_ortu');
   } else if (activeFilter.value === 'live') {
     list = list.filter(l => l.verifyStatus === 'live');
   }
@@ -318,33 +351,64 @@ function toggleSelectAll() {
 
 function handleAddEmails() {
   if (!newEmailsText.value.trim()) return;
-  emit('addLedgerEmails', newEmailsText.value, defaultSetorStatus.value);
+  const formattedDate = defaultSetorStatus.value === 'setor_tgl' ? formatDateDisplay(customInputDate.value) : null;
+  emit('addLedgerEmails', newEmailsText.value, defaultSetorStatus.value, formattedDate);
   newEmailsText.value = '';
 }
 
-function markAsSetor(row) {
-  const dateFormatted = getFormattedDate();
-  emit('updateLedgerRow', {
-    ...row,
-    setorStatus: 'disetor',
-    tglSetor: dateFormatted,
-    updatedAt: dateFormatted
+function handleBatchKeterangan(newStatus) {
+  if (selectedEmails.value.length === 0 || !newStatus) return;
+  
+  let targetDate = null;
+  if (newStatus === 'setor_tgl') {
+    const userPicker = prompt('Masukkan tanggal setor (format YYYY-MM-DD atau bebas):', new Date().toISOString().slice(0, 10));
+    if (!userPicker) return;
+    targetDate = formatDateDisplay(userPicker);
+  } else if (newStatus === 'sudah_setor') {
+    targetDate = getFormattedDate();
+  }
+
+  selectedEmails.value.forEach(emailStr => {
+    const row = props.ledger.find(l => l.email === emailStr);
+    if (row) {
+      emit('updateLedgerRow', {
+        ...row,
+        setorStatus: newStatus,
+        tglSetor: targetDate || row.tglSetor,
+        updatedAt: getFormattedDate()
+      });
+    }
   });
 }
 
-function cancelSetor(row) {
+function handleRowStatusChange(row, newStatus) {
+  let targetDate = row.tglSetor;
+  const nowFormatted = getFormattedDate();
+
+  if (newStatus === 'setor_tgl') {
+    targetDate = targetDate || formatDateDisplay(new Date().toISOString().slice(0, 10));
+  } else if (newStatus === 'sudah_setor') {
+    targetDate = nowFormatted;
+  } else if (newStatus === 'siap_setor' || newStatus === 'akun_ortu') {
+    targetDate = null;
+  }
+
   emit('updateLedgerRow', {
     ...row,
-    setorStatus: 'belum_disetor',
-    tglSetor: null,
+    setorStatus: newStatus,
+    tglSetor: targetDate,
+    updatedAt: nowFormatted
+  });
+}
+
+function handleRowDateChange(row, dateVal) {
+  if (!dateVal) return;
+  const formatted = formatDateDisplay(dateVal);
+  emit('updateLedgerRow', {
+    ...row,
+    tglSetor: formatted,
     updatedAt: getFormattedDate()
   });
-}
-
-function setorSelectedEmails() {
-  if (selectedEmails.value.length === 0) return;
-  const dateFormatted = getFormattedDate();
-  emit('bulkSetor', selectedEmails.value, dateFormatted);
 }
 
 function deleteFromLedger(email) {
@@ -359,12 +423,68 @@ function getFormattedDate() {
   return `${dateStr} ${timeStr}`;
 }
 
+function formatDateDisplay(dateInputStr) {
+  if (!dateInputStr) return getFormattedDate();
+  try {
+    const [y, m, d] = dateInputStr.split('-');
+    if (y && m && d) {
+      return `${d}/${m}/${y}`;
+    }
+    return dateInputStr;
+  } catch (e) {
+    return dateInputStr;
+  }
+}
+
+function formatInputDate(dateDisplayStr) {
+  if (!dateDisplayStr) return new Date().toISOString().slice(0, 10);
+  try {
+    const parts = dateDisplayStr.split(' ')[0].split('/');
+    if (parts.length === 3) {
+      const [d, m, y] = parts;
+      return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+    }
+  } catch (e) {
+    // fallback
+  }
+  return new Date().toISOString().slice(0, 10);
+}
+
 function getFilterCount(val) {
   if (val === 'all') return props.ledger.length;
-  if (val === 'belum_disetor') return pendingCount.value;
-  if (val === 'disetor') return submittedCount.value;
+  if (val === 'siap_setor') return siapSetorCount.value;
+  if (val === 'setor_tgl') return setorTglCount.value;
+  if (val === 'sudah_setor') return sudahSetorCount.value;
+  if (val === 'akun_ortu') return akunOrtuCount.value;
   if (val === 'live') return liveInLedgerCount.value;
   return 0;
+}
+
+function getKeteranganBadgeClass(status) {
+  switch (status) {
+    case 'siap_setor':
+    case 'belum_disetor':
+      return 'bg-blue-50 text-blue-700 border-blue-200';
+    case 'setor_tgl':
+      return 'bg-indigo-50 text-indigo-700 border-indigo-200';
+    case 'sudah_setor':
+    case 'disetor':
+      return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+    case 'akun_ortu':
+      return 'bg-purple-50 text-purple-700 border-purple-200';
+    default:
+      return 'bg-slate-50 text-slate-700 border-slate-200';
+  }
+}
+
+function getKeteranganLabel(statusKey) {
+  switch (statusKey) {
+    case 'siap_setor': case 'belum_disetor': return 'Siap Setor';
+    case 'setor_tgl': return 'Setor Tgl';
+    case 'sudah_setor': case 'disetor': return 'Sudah Setor';
+    case 'akun_ortu': return 'Akun Ortu';
+    default: return 'Siap Setor';
+  }
 }
 
 function getVerifyStatusLabel(status) {
@@ -402,9 +522,9 @@ function exportLedgerExcel() {
   const data = props.ledger.map((l, idx) => ({
     'No': idx + 1,
     'Email': l.email,
-    'Status Setor': l.setorStatus === 'disetor' ? 'Sudah Disetor' : 'Belum Disetor',
+    'Keterangan / Status': getKeteranganLabel(l.setorStatus),
     'Tanggal Setor': l.tglSetor || '-',
-    'Verify Status': l.verifyStatus ? l.verifyStatus.toUpperCase() : 'UNCHECKED',
+    'Hasil Live Check': getVerifyStatusLabel(l.verifyStatus),
     'Terakhir Diperbarui': l.updatedAt || '-'
   }));
 
@@ -416,7 +536,7 @@ function exportLedgerExcel() {
     { wch: 32 },
     { wch: 18 },
     { wch: 20 },
-    { wch: 16 },
+    { wch: 20 },
     { wch: 22 }
   ];
 
