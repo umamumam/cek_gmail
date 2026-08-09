@@ -54,6 +54,15 @@
       <main class="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 space-y-6 max-w-7xl w-full mx-auto flex flex-col justify-between">
         
         <div class="space-y-6">
+          <!-- Tab 0: Dashboard & Monitoring -->
+          <DashboardView
+            v-if="activeTab === 'dashboard'"
+            :checkHistory="checkHistory"
+            :ledger="emailLedger"
+            :nokosList="nokosHistory"
+            @addNokos="addNokosTopUp"
+            @deleteNokos="deleteNokosTopUp" />
+
           <!-- Tab 1: Cek Email (Bulk Verification Hub) -->
           <CekEmailView
             v-if="activeTab === 'checker'"
@@ -169,6 +178,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import SidebarNav from './components/SidebarNav.vue';
 import HeaderBar from './components/HeaderBar.vue';
+import DashboardView from './components/DashboardView.vue';
 import CekEmailView from './components/CekEmailView.vue';
 import RiwayatView from './components/RiwayatView.vue';
 import PerubahanView from './components/PerubahanView.vue';
@@ -177,7 +187,7 @@ import DeveloperApiView from './components/DeveloperApiView.vue';
 import DetailSlideOver from './components/DetailSlideOver.vue';
 
 // Navigation State
-const activeTab = ref('checker'); // 'checker' | 'riwayat' | 'perubahan' | 'ledger' | 'api'
+const activeTab = ref('dashboard'); // 'dashboard' | 'checker' | 'riwayat' | 'perubahan' | 'ledger' | 'api'
 const globalSearch = ref('');
 const isMobileMenuOpen = ref(false);
 
@@ -207,6 +217,7 @@ let startTime = 0;
 const checkHistory = ref(JSON.parse(localStorage.getItem('cekgmail_history') || '[]'));
 const statusChangeLogs = ref(JSON.parse(localStorage.getItem('cekgmail_changes') || '[]'));
 const emailLedger = ref(JSON.parse(localStorage.getItem('cekgmail_ledger') || '[]'));
+const nokosHistory = ref(JSON.parse(localStorage.getItem('cekgmail_nokos') || '[]'));
 
 // Persistent Credits Cache
 const savedCredits = JSON.parse(localStorage.getItem('cekgmail_credits') || '{}');
@@ -219,10 +230,11 @@ const toastMessage = ref('');
 // Computed Titles & Descriptions per Tab
 const tabTitle = computed(() => {
   switch (activeTab.value) {
+    case 'dashboard': return 'Dashboard Analytics & Monitoring';
     case 'checker': return 'Cek Email Health Hub';
     case 'riwayat': return 'Riwayat Email Terverifikasi';
     case 'perubahan': return 'Riwayat Perubahan Status Email';
-    case 'ledger': return 'Catatan Email (Disetor vs Belum Disetor)';
+    case 'ledger': return 'Catatan Email (Ledger)';
     case 'api': return 'Developer API & Integration';
     default: return 'CekGmail';
   }
@@ -230,6 +242,7 @@ const tabTitle = computed(() => {
 
 const tabDescription = computed(() => {
   switch (activeTab.value) {
+    case 'dashboard': return 'Pantau statistik live check, status ledger email, dan pengeluaran top up nokos.';
     case 'checker': return 'Verifikasi keaktifan alamat email secara instan atau masal.';
     case 'riwayat': return 'Daftar riwayat seluruh email yang pernah diperiksa dalam sistem.';
     case 'perubahan': return 'Log otomatis saat status email berubah dari Die ke Live atau sebaliknya.';
@@ -251,6 +264,7 @@ function saveState() {
   localStorage.setItem('cekgmail_history', JSON.stringify(checkHistory.value));
   localStorage.setItem('cekgmail_changes', JSON.stringify(statusChangeLogs.value));
   localStorage.setItem('cekgmail_ledger', JSON.stringify(emailLedger.value));
+  localStorage.setItem('cekgmail_nokos', JSON.stringify(nokosHistory.value));
   localStorage.setItem('cekgmail_credits', JSON.stringify({ apiCredits: apiCredits.value, subCredits: subCredits.value }));
 }
 
@@ -643,6 +657,19 @@ function deleteLedgerEmail(emailStr) {
   emailLedger.value = emailLedger.value.filter(l => l.email !== emailStr);
   saveState();
   showToast(`Email ${emailStr} dihapus dari Ledger.`);
+}
+
+// Nokos Top Up Handlers
+function addNokosTopUp(item) {
+  nokosHistory.value.unshift(item);
+  saveState();
+  showToast(`Catatan Top Up Nokos ${item.provider} berhasil disimpan.`);
+}
+
+function deleteNokosTopUp(id) {
+  nokosHistory.value = nokosHistory.value.filter(n => n.id !== id);
+  saveState();
+  showToast('Catatan Top Up Nokos dihapus.');
 }
 
 function addToLedgerSingle(item) {

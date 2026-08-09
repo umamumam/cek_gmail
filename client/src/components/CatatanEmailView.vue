@@ -305,13 +305,13 @@ const emit = defineEmits([
 const newEmailsText = ref('');
 const defaultSetorStatus = ref('new');
 const customInputDate = ref(new Date().toISOString().slice(0, 10));
-const activeFilter = ref('all');
+const activeFilter = ref('new');
 const searchQuery = ref('');
 const selectedEmails = ref([]);
 
 const filterTabs = [
-  { label: 'Semua Ledger', value: 'all' },
   { label: 'NEW (Kosong)', value: 'new' },
+  { label: 'Semua Ledger', value: 'all' },
   { label: 'Siap Setor', value: 'siap_setor' },
   { label: 'Setor Tgl', value: 'setor_tgl' },
   { label: 'Sudah Setor', value: 'sudah_setor' },
