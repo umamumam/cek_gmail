@@ -181,90 +181,117 @@
 
     <!-- Main Ledger Table Container -->
     <div class="saas-card overflow-hidden">
-      <!-- Table Filters & Batch Controls -->
-      <div
-        class="p-4 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50/60">
-        <!-- Streamlined 4 Pill Tabs (NEW, Siap Setor, Selesai, Semua) -->
-        <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 overflow-x-auto">
-          <button
-            v-for="tab in filterTabs"
-            :key="tab.value"
-            @click="activeFilter = tab.value"
-            class="px-3.5 py-1 rounded-lg text-xs font-semibold transition cursor-pointer whitespace-nowrap"
-            :class="
-              activeFilter === tab.value
-                ? 'bg-blue-600 text-white font-bold shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
-            ">
-            {{ tab.label }} ({{ getFilterCount(tab.value) }})
-          </button>
-        </div>
-
-        <!-- Search & Compact Actions -->
-        <div class="flex items-center gap-2 flex-wrap">
-          <div class="relative flex-1 sm:w-44">
-            <input
-              v-model="searchQuery"
-              type="text"
-              placeholder="Cari email..."
-              class="w-full bg-white border border-slate-200 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition" />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2">
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
+      <!-- Table Filters & Batch Controls (2-Row DataTables Layout) -->
+      <div class="p-4 border-b border-slate-200 bg-slate-50/70 space-y-3">
+        <!-- Row 1: Filter Tabs + DataTables Length & Live Search -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <!-- 4 Filter Tabs -->
+          <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 overflow-x-auto shadow-2xs">
+            <button
+              v-for="tab in filterTabs"
+              :key="tab.value"
+              @click="activeFilter = tab.value"
+              class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer whitespace-nowrap"
+              :class="
+                activeFilter === tab.value
+                  ? 'bg-blue-600 text-white font-bold shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              ">
+              {{ tab.label }} ({{ getFilterCount(tab.value) }})
+            </button>
           </div>
 
-          <!-- Bulk Keterangan Selector -->
-          <select
-            @change="
-              handleBatchKeterangan($event.target.value);
-              $event.target.value = '';
-            "
-            :disabled="selectedEmails.length === 0"
-            class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition cursor-pointer disabled:opacity-40 focus:outline-none">
-            <option value="" disabled selected>
-              Ubah Status ({{ selectedEmails.length }}) ▼
-            </option>
-            <option value="new">⚪ Set NEW</option>
-            <option value="siap_setor">🔵 Set Siap Setor</option>
-            <option value="setor_tgl">📅 Set Setor Tgl...</option>
-            <option value="sudah_setor">✅ Set Sudah Setor</option>
-            <option value="akun_ortu">👨‍👩‍👧 Set Akun Ortu</option>
-          </select>
+          <!-- Right: DataTables Length Select & Live Search -->
+          <div class="flex items-center gap-3 flex-wrap">
+            <!-- DataTables Page Size Select -->
+            <div class="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+              <span>Tampilkan:</span>
+              <select
+                v-model.number="pageSize"
+                class="bg-white border border-slate-300 rounded-lg px-2 py-1 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500 shadow-2xs">
+                <option :value="10">10</option>
+                <option :value="25">25</option>
+                <option :value="50">50</option>
+                <option :value="100">100</option>
+                <option :value="999999">Semua</option>
+              </select>
+            </div>
 
-          <!-- Bulk Password Modifier -->
-          <button
-            @click="handleBatchPassword"
-            :disabled="selectedEmails.length === 0"
-            class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition cursor-pointer disabled:opacity-40 flex items-center gap-1">
-            <span>🔑 Ubah Password ({{ selectedEmails.length }})</span>
-          </button>
+            <!-- Live Search Bar -->
+            <div class="relative flex-1 sm:w-52">
+              <input
+                v-model="searchQuery"
+                type="text"
+                placeholder="Cari email / pass..."
+                class="w-full bg-white border border-slate-300 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition shadow-2xs" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            </div>
+          </div>
+        </div>
 
-          <button
-            @click="$emit('checkSelectedLedger', selectedEmails)"
-            :disabled="selectedEmails.length === 0"
-            class="px-3 py-1.5 rounded-xl text-xs font-bold btn-primary cursor-pointer disabled:opacity-40">
-            Cek ({{ selectedEmails.length }})
-          </button>
+        <!-- Row 2: Batch Actions Controls -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-slate-200/80">
+          <div class="flex items-center gap-2 flex-wrap">
+            <!-- Bulk Keterangan Selector -->
+            <select
+              @change="
+                handleBatchKeterangan($event.target.value);
+                $event.target.value = '';
+              "
+              :disabled="selectedEmails.length === 0"
+              class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition cursor-pointer disabled:opacity-40 focus:outline-none shadow-2xs">
+              <option value="" disabled selected>
+                Ubah Status ({{ selectedEmails.length }}) ▼
+              </option>
+              <option value="new">⚪ Set NEW</option>
+              <option value="siap_setor">🔵 Set Siap Setor</option>
+              <option value="setor_tgl">📅 Set Setor Tgl...</option>
+              <option value="sudah_setor">✅ Set Sudah Setor</option>
+              <option value="akun_ortu">👨‍👩‍👧 Set Akun Ortu</option>
+            </select>
 
-          <button
-            @click="exportLedgerExcel"
-            class="px-3 py-1.5 rounded-xl text-xs btn-secondary cursor-pointer flex items-center gap-1">
-            <span>Ekspor .xlsx</span>
-          </button>
+            <!-- Bulk Password Modifier -->
+            <button
+              @click="handleBatchPassword"
+              :disabled="selectedEmails.length === 0"
+              class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition cursor-pointer disabled:opacity-40 flex items-center gap-1 shadow-2xs">
+              <span>🔑 Ubah Password ({{ selectedEmails.length }})</span>
+            </button>
 
-          <button
-            @click="$emit('clearLedger')"
-            :disabled="ledger.length === 0"
-            class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-white text-rose-600 border border-slate-200 hover:bg-rose-50 transition cursor-pointer disabled:opacity-40">
-            Kosongkan
-          </button>
+            <!-- Bulk Verification Button -->
+            <button
+              @click="$emit('checkSelectedLedger', selectedEmails)"
+              :disabled="selectedEmails.length === 0"
+              class="px-3.5 py-1.5 rounded-xl text-xs font-bold btn-primary cursor-pointer disabled:opacity-40 shadow-2xs">
+              <span>Cek Terpilih ({{ selectedEmails.length }})</span>
+            </button>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <!-- Export Excel -->
+            <button
+              @click="exportLedgerExcel"
+              class="px-3.5 py-1.5 rounded-xl text-xs btn-secondary cursor-pointer flex items-center gap-1">
+              <span>Ekspor .xlsx</span>
+            </button>
+
+            <!-- Clear Ledger -->
+            <button
+              @click="$emit('clearLedger')"
+              :disabled="ledger.length === 0"
+              class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-white text-rose-600 border border-slate-200 hover:bg-rose-50 transition cursor-pointer disabled:opacity-40">
+              Kosongkan
+            </button>
+          </div>
         </div>
       </div>
 
@@ -302,7 +329,7 @@
           </thead>
           <tbody class="divide-y divide-slate-200/70 font-sans">
             <tr
-              v-for="row in filteredLedger"
+              v-for="row in paginatedLedger"
               :key="row.email"
               class="hover:bg-slate-50/80 transition"
               :class="
@@ -446,6 +473,39 @@
         </table>
       </div>
 
+      <!-- DataTables Footer: Info Entries & Pagination Controls -->
+      <div v-if="filteredLedger.length > 0" class="px-4 py-3 border-t border-slate-200 bg-slate-50/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+        <div>
+          Menampilkan <span class="font-bold text-slate-800">{{ startEntryIndex }}</span> sampai <span class="font-bold text-slate-800">{{ endEntryIndex }}</span> dari <span class="font-bold text-slate-800">{{ totalFilteredCount }}</span> total data
+        </div>
+
+        <!-- DataTables Pagination Buttons -->
+        <div v-if="totalPages > 1" class="flex items-center gap-1">
+          <button
+            @click="currentPage--"
+            :disabled="currentPage === 1"
+            class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 disabled:opacity-40 font-semibold cursor-pointer">
+            Sebelumnya
+          </button>
+
+          <button
+            v-for="p in totalPages"
+            :key="p"
+            @click="currentPage = p"
+            class="px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer"
+            :class="currentPage === p ? 'bg-blue-600 text-white shadow-2xs' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'">
+            {{ p }}
+          </button>
+
+          <button
+            @click="currentPage++"
+            :disabled="currentPage === totalPages"
+            class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 disabled:opacity-40 font-semibold cursor-pointer">
+            Selanjutnya
+          </button>
+        </div>
+      </div>
+
       <!-- Empty State -->
       <div v-else class="p-12 text-center space-y-3">
         <div
@@ -474,7 +534,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import * as XLSX from "xlsx";
 
 const props = defineProps({
@@ -561,9 +621,40 @@ const filteredLedger = computed(() => {
 
   if (searchQuery.value.trim()) {
     const q = searchQuery.value.toLowerCase().trim();
-    list = list.filter((l) => l.email.toLowerCase().includes(q));
+    list = list.filter((l) => l.email.toLowerCase().includes(q) || (l.password && l.password.toLowerCase().includes(q)));
   }
   return list;
+});
+
+// DataTables Pagination Logic
+const pageSize = ref(10);
+const currentPage = ref(1);
+
+watch([searchQuery, activeFilter, pageSize], () => {
+  currentPage.value = 1;
+});
+
+const totalFilteredCount = computed(() => filteredLedger.value.length);
+
+const totalPages = computed(() => {
+  if (pageSize.value >= 999999) return 1;
+  return Math.ceil(totalFilteredCount.value / pageSize.value) || 1;
+});
+
+const paginatedLedger = computed(() => {
+  if (pageSize.value >= 999999) return filteredLedger.value;
+  const start = (currentPage.value - 1) * pageSize.value;
+  return filteredLedger.value.slice(start, start + pageSize.value);
+});
+
+const startEntryIndex = computed(() => {
+  if (totalFilteredCount.value === 0) return 0;
+  return (currentPage.value - 1) * pageSize.value + 1;
+});
+
+const endEntryIndex = computed(() => {
+  if (pageSize.value >= 999999) return totalFilteredCount.value;
+  return Math.min(currentPage.value * pageSize.value, totalFilteredCount.value);
 });
 
 const isAllSelected = computed(() => {
