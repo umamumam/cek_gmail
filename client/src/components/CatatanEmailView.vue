@@ -184,20 +184,20 @@
       <!-- Table Filters & Batch Controls -->
       <div
         class="p-4 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50/60">
-        <!-- Streamlined Dropdown Filter -->
-        <div class="flex items-center gap-2">
-          <span class="text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Filter:</span>
-          <select
-            v-model="activeFilter"
-            class="bg-white border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500 shadow-xs cursor-pointer">
-            <option value="new">⚪ NEW ({{ newCount }})</option>
-            <option value="all">📂 Semua Ledger ({{ props.ledger.length }})</option>
-            <option value="siap_setor">🔵 Siap Setor ({{ siapSetorCount }})</option>
-            <option value="setor_tgl">📅 Setor Tgl ({{ setorTglCount }})</option>
-            <option value="sudah_setor">✅ Sudah Setor ({{ sudahSetorCount }})</option>
-            <option value="akun_ortu">👨‍👩‍👧 Akun Ortu ({{ akunOrtuCount }})</option>
-            <option value="live">🟢 Live Verified ({{ liveInLedgerCount }})</option>
-          </select>
+        <!-- Streamlined 4 Pill Tabs (NEW, Siap Setor, Selesai, Semua) -->
+        <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 overflow-x-auto">
+          <button
+            v-for="tab in filterTabs"
+            :key="tab.value"
+            @click="activeFilter = tab.value"
+            class="px-3.5 py-1 rounded-lg text-xs font-semibold transition cursor-pointer whitespace-nowrap"
+            :class="
+              activeFilter === tab.value
+                ? 'bg-blue-600 text-white font-bold shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
+            ">
+            {{ tab.label }} ({{ getFilterCount(tab.value) }})
+          </button>
         </div>
 
         <!-- Search & Compact Actions -->
@@ -495,12 +495,9 @@ const visiblePassMap = ref({});
 
 const filterTabs = [
   { label: "NEW", value: "new" },
-  { label: "Semua Ledger", value: "all" },
   { label: "Siap Setor", value: "siap_setor" },
-  { label: "Setor Tgl", value: "setor_tgl" },
-  { label: "Sudah Setor", value: "sudah_setor" },
-  { label: "Akun Ortu", value: "akun_ortu" },
-  { label: "Live Verified", value: "live" },
+  { label: "Selesai", value: "sudah_setor" },
+  { label: "Semua Ledger", value: "all" }
 ];
 
 const newCount = computed(
