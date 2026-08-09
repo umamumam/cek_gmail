@@ -2,85 +2,77 @@
   <div class="space-y-6">
     <!-- Top Ledger Stats Summary -->
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-      <div class="saas-card p-3.5">
-        <span
-          class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block"
-          >Total Ledger</span
-        >
-        <span
-          class="text-xl font-black text-slate-900 font-mono mt-0.5 block"
-          >{{ ledger.length }}</span
-        >
-        <span class="text-[9px] text-slate-400">Database email unik</span>
+      <!-- 1. Total Ledger Card -->
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 p-4 text-white shadow-md shadow-slate-950/20 hover:shadow-lg transition-all duration-200 group">
+        <div class="absolute -right-4 -bottom-4 w-16 h-16 bg-blue-500/20 rounded-full blur-xl group-hover:bg-blue-500/30 transition"></div>
+        <div class="flex items-center justify-between relative z-10">
+          <span class="text-[10px] font-extrabold text-blue-200 uppercase tracking-wider block">Total Ledger</span>
+          <span class="w-6 h-6 rounded-lg bg-white/10 backdrop-blur-md text-blue-300 flex items-center justify-center text-[10px] font-bold">#</span>
+        </div>
+        <div class="mt-2 relative z-10">
+          <span class="text-xl font-black font-mono tracking-tight text-white block">{{ ledger.length }}</span>
+          <span class="text-[9px] text-blue-200/80 font-medium mt-1 block">Database Email Unik</span>
+        </div>
       </div>
 
-      <div class="saas-card p-3.5 border-l-4 border-l-slate-400">
-        <span
-          class="text-[10px] font-bold text-slate-600 uppercase tracking-wider block"
-          >NEW</span
-        >
-        <span
-          class="text-xl font-black text-slate-700 font-mono mt-0.5 block"
-          >{{ newCount }}</span
-        >
-        <span class="text-[9px] text-slate-500 font-semibold"
-          >Status baru / belum di-set</span
-        >
+      <!-- 2. NEW Card -->
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-500/10 via-white to-slate-500/5 p-4 border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-200 group">
+        <div class="flex items-center justify-between relative z-10">
+          <span class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block">NEW (Kosong)</span>
+          <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+        </div>
+        <div class="mt-2 relative z-10">
+          <span class="text-xl font-black text-slate-900 font-mono tracking-tight block">{{ newCount }}</span>
+          <span class="text-[9px] text-slate-500 font-semibold mt-1 block">Belum Di-Set Status</span>
+        </div>
       </div>
 
-      <div class="saas-card p-3.5 border-l-4 border-l-blue-500">
-        <span
-          class="text-[10px] font-bold text-blue-700 uppercase tracking-wider block"
-          >Siap Setor</span
-        >
-        <span class="text-xl font-black text-blue-700 font-mono mt-0.5 block">{{
-          siapSetorCount
-        }}</span>
-        <span class="text-[9px] text-blue-600 font-semibold"
-          >Siap diproses</span
-        >
+      <!-- 3. Siap Setor Card -->
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500/10 via-white to-blue-500/5 p-4 border border-blue-200/80 shadow-xs hover:shadow-md transition-all duration-200 group">
+        <div class="flex items-center justify-between relative z-10">
+          <span class="text-[10px] font-extrabold text-blue-800 uppercase tracking-wider block">Siap Setor</span>
+          <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+        </div>
+        <div class="mt-2 relative z-10">
+          <span class="text-xl font-black text-slate-900 font-mono tracking-tight block">{{ siapSetorCount }}</span>
+          <span class="text-[9px] text-blue-700 font-semibold mt-1 block">Siap Diproses</span>
+        </div>
       </div>
 
-      <div class="saas-card p-3.5 border-l-4 border-l-indigo-500">
-        <span
-          class="text-[10px] font-bold text-indigo-700 uppercase tracking-wider block"
-          >Setor Tgl...</span
-        >
-        <span
-          class="text-xl font-black text-indigo-700 font-mono mt-0.5 block"
-          >{{ setorTglCount }}</span
-        >
-        <span class="text-[9px] text-indigo-600 font-semibold"
-          >Jadwal tanggal</span
-        >
+      <!-- 4. Setor Tgl Card -->
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-500/10 via-white to-indigo-500/5 p-4 border border-indigo-200/80 shadow-xs hover:shadow-md transition-all duration-200 group">
+        <div class="flex items-center justify-between relative z-10">
+          <span class="text-[10px] font-extrabold text-indigo-800 uppercase tracking-wider block">Setor Tgl...</span>
+          <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+        </div>
+        <div class="mt-2 relative z-10">
+          <span class="text-xl font-black text-slate-900 font-mono tracking-tight block">{{ setorTglCount }}</span>
+          <span class="text-[9px] text-indigo-700 font-semibold mt-1 block">Jadwal Tanggal</span>
+        </div>
       </div>
 
-      <div class="saas-card p-3.5 border-l-4 border-l-emerald-500">
-        <span
-          class="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block"
-          >Sudah Setor</span
-        >
-        <span
-          class="text-xl font-black text-emerald-700 font-mono mt-0.5 block"
-          >{{ sudahSetorCount }}</span
-        >
-        <span class="text-[9px] text-emerald-600 font-semibold"
-          >Telah disetorkan</span
-        >
+      <!-- 5. Sudah Setor Card -->
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500/10 via-white to-emerald-500/5 p-4 border border-emerald-200/80 shadow-xs hover:shadow-md transition-all duration-200 group">
+        <div class="flex items-center justify-between relative z-10">
+          <span class="text-[10px] font-extrabold text-emerald-800 uppercase tracking-wider block">Sudah Setor</span>
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        </div>
+        <div class="mt-2 relative z-10">
+          <span class="text-xl font-black text-slate-900 font-mono tracking-tight block">{{ sudahSetorCount }}</span>
+          <span class="text-[9px] text-emerald-700 font-semibold mt-1 block">Telah Disetorkan</span>
+        </div>
       </div>
 
-      <div class="saas-card p-3.5 border-l-4 border-l-purple-500">
-        <span
-          class="text-[10px] font-bold text-purple-700 uppercase tracking-wider block"
-          >Akun Ortu</span
-        >
-        <span
-          class="text-xl font-black text-purple-700 font-mono mt-0.5 block"
-          >{{ akunOrtuCount }}</span
-        >
-        <span class="text-[9px] text-purple-600 font-semibold"
-          >Kategori akun ortu</span
-        >
+      <!-- 6. Akun Ortu Card -->
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500/10 via-white to-purple-500/5 p-4 border border-purple-200/80 shadow-xs hover:shadow-md transition-all duration-200 group">
+        <div class="flex items-center justify-between relative z-10">
+          <span class="text-[10px] font-extrabold text-purple-800 uppercase tracking-wider block">Akun Ortu</span>
+          <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+        </div>
+        <div class="mt-2 relative z-10">
+          <span class="text-xl font-black text-slate-900 font-mono tracking-tight block">{{ akunOrtuCount }}</span>
+          <span class="text-[9px] text-purple-700 font-semibold mt-1 block">Kategori Akun Ortu</span>
+        </div>
       </div>
     </div>
 

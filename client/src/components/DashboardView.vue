@@ -109,20 +109,39 @@
           </div>
         </div>
 
-        <!-- Timeframe Toggle Switcher -->
-        <div class="flex items-center p-1.5 bg-slate-100 rounded-2xl border border-slate-200/80 self-start sm:self-auto shadow-inner">
-          <button
-            @click="timeframe = 'weekly'"
-            class="px-4 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer flex items-center gap-1.5"
-            :class="timeframe === 'weekly' ? 'bg-white text-slate-900 shadow-md shadow-slate-200 font-extrabold' : 'text-slate-500 hover:text-slate-900'">
-            <span>📅 7 Hari Terakhir</span>
-          </button>
-          <button
-            @click="timeframe = 'monthly'"
-            class="px-4 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer flex items-center gap-1.5"
-            :class="timeframe === 'monthly' ? 'bg-white text-slate-900 shadow-md shadow-slate-200 font-extrabold' : 'text-slate-500 hover:text-slate-900'">
-            <span>📆 Grafik Bulanan</span>
-          </button>
+        <!-- Chart Mode & Timeframe Controls -->
+        <div class="flex items-center gap-2 flex-wrap self-start sm:self-auto">
+          <!-- Chart Style Mode Switcher -->
+          <div class="flex items-center p-1 bg-slate-100 rounded-xl border border-slate-200/80 shadow-inner">
+            <button
+              @click="chartType = 'spline'"
+              class="px-3 py-1 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer flex items-center gap-1"
+              :class="chartType === 'spline' ? 'bg-white text-slate-900 shadow-xs font-extrabold' : 'text-slate-500 hover:text-slate-900'">
+              <span>📈 Area Smooth</span>
+            </button>
+            <button
+              @click="chartType = 'bar'"
+              class="px-3 py-1 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer flex items-center gap-1"
+              :class="chartType === 'bar' ? 'bg-white text-slate-900 shadow-xs font-extrabold' : 'text-slate-500 hover:text-slate-900'">
+              <span>📊 Bar Hybrid</span>
+            </button>
+          </div>
+
+          <!-- Timeframe Toggle Switcher -->
+          <div class="flex items-center p-1 bg-slate-100 rounded-xl border border-slate-200/80 shadow-inner">
+            <button
+              @click="timeframe = 'weekly'"
+              class="px-3 py-1 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer flex items-center gap-1.5"
+              :class="timeframe === 'weekly' ? 'bg-white text-slate-900 shadow-xs font-extrabold' : 'text-slate-500 hover:text-slate-900'">
+              <span>📅 7 Hari Terakhir</span>
+            </button>
+            <button
+              @click="timeframe = 'monthly'"
+              class="px-3 py-1 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer flex items-center gap-1.5"
+              :class="timeframe === 'monthly' ? 'bg-white text-slate-900 shadow-xs font-extrabold' : 'text-slate-500 hover:text-slate-900'">
+              <span>📆 Grafik Bulanan</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -413,6 +432,8 @@ import {
   LineController,
   LineElement,
   PointElement,
+  BarController,
+  BarElement,
   LinearScale,
   CategoryScale,
   Title,
@@ -425,6 +446,8 @@ Chart.register(
   LineController,
   LineElement,
   PointElement,
+  BarController,
+  BarElement,
   LinearScale,
   CategoryScale,
   Title,
@@ -445,6 +468,7 @@ const emit = defineEmits(['addNokos', 'deleteNokos', 'addIncome', 'deleteIncome'
 const canvasRef = ref(null);
 let chartInstance = null;
 const timeframe = ref('weekly'); // 'weekly' | 'monthly'
+const chartType = ref('spline'); // 'spline' | 'bar'
 
 // Nokos Form Modal State
 const showNokosModal = ref(false);
@@ -559,54 +583,72 @@ function renderChart() {
   const { labels, incomeData, nokosData } = activeChartData.value;
   const ctx = canvasRef.value.getContext('2d');
 
-  // Gradient fill for Income (Emerald)
-  const incomeGradient = ctx.createLinearGradient(0, 0, 0, 300);
-  incomeGradient.addColorStop(0, 'rgba(16, 185, 129, 0.35)');
+  // Multi-stop Gradient fill for Income (Emerald)
+  const incomeGradient = ctx.createLinearGradient(0, 0, 0, 320);
+  incomeGradient.addColorStop(0, 'rgba(16, 185, 129, 0.45)');
+  incomeGradient.addColorStop(0.5, 'rgba(16, 185, 129, 0.15)');
   incomeGradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
 
-  // Gradient fill for Nokos Expense (Amber)
-  const nokosGradient = ctx.createLinearGradient(0, 0, 0, 300);
-  nokosGradient.addColorStop(0, 'rgba(245, 158, 11, 0.35)');
+  // Multi-stop Gradient fill for Nokos Expense (Amber)
+  const nokosGradient = ctx.createLinearGradient(0, 0, 0, 320);
+  nokosGradient.addColorStop(0, 'rgba(245, 158, 11, 0.45)');
+  nokosGradient.addColorStop(0.5, 'rgba(245, 158, 11, 0.15)');
   nokosGradient.addColorStop(1, 'rgba(245, 158, 11, 0.0)');
+
+  const isBar = chartType.value === 'bar';
+
+  const datasets = [
+    {
+      type: isBar ? 'bar' : 'line',
+      label: 'Pendapatan Pemasukan (Rp)',
+      data: incomeData,
+      borderColor: '#10B981',
+      borderWidth: 3,
+      backgroundColor: isBar ? 'rgba(16, 185, 129, 0.85)' : incomeGradient,
+      fill: !isBar,
+      tension: 0.45,
+      cubicInterpolationMode: 'monotone',
+      pointBackgroundColor: '#FFFFFF',
+      pointBorderColor: '#10B981',
+      pointBorderWidth: 3,
+      pointRadius: isBar ? 0 : 5,
+      pointHoverRadius: 9,
+      pointHoverBorderWidth: 4,
+      borderRadius: isBar ? { topLeft: 8, topRight: 8, bottomLeft: 4, bottomRight: 4 } : 0,
+      maxBarThickness: 36
+    },
+    {
+      type: 'line',
+      label: 'Top Up Nokos Pengeluaran (Rp)',
+      data: nokosData,
+      borderColor: '#F59E0B',
+      borderWidth: 3,
+      backgroundColor: nokosGradient,
+      fill: true,
+      tension: 0.45,
+      cubicInterpolationMode: 'monotone',
+      pointBackgroundColor: '#FFFFFF',
+      pointBorderColor: '#F59E0B',
+      pointBorderWidth: 3,
+      pointRadius: 5,
+      pointHoverRadius: 9,
+      pointHoverBorderWidth: 4
+    }
+  ];
 
   chartInstance = new Chart(ctx, {
     type: 'line',
     data: {
       labels,
-      datasets: [
-        {
-          label: 'Pendapatan Pemasukan (Rp)',
-          data: incomeData,
-          borderColor: '#10B981',
-          borderWidth: 3,
-          backgroundColor: incomeGradient,
-          fill: true,
-          tension: 0.4,
-          pointBackgroundColor: '#FFFFFF',
-          pointBorderColor: '#10B981',
-          pointBorderWidth: 3,
-          pointRadius: 5,
-          pointHoverRadius: 8
-        },
-        {
-          label: 'Top Up Nokos Pengeluaran (Rp)',
-          data: nokosData,
-          borderColor: '#F59E0B',
-          borderWidth: 3,
-          backgroundColor: nokosGradient,
-          fill: true,
-          tension: 0.4,
-          pointBackgroundColor: '#FFFFFF',
-          pointBorderColor: '#F59E0B',
-          pointBorderWidth: 3,
-          pointRadius: 5,
-          pointHoverRadius: 8
-        }
-      ]
+      datasets
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      animation: {
+        duration: 900,
+        easing: 'easeOutQuart'
+      },
       interaction: {
         mode: 'index',
         intersect: false
@@ -623,11 +665,11 @@ function renderChart() {
           }
         },
         tooltip: {
-          backgroundColor: 'rgba(15, 23, 42, 0.92)',
+          backgroundColor: 'rgba(15, 23, 42, 0.94)',
           titleFont: { family: 'Plus Jakarta Sans, sans-serif', size: 13, weight: 'bold' },
           bodyFont: { family: 'JetBrains Mono, monospace', size: 12 },
           padding: 12,
-          cornerRadius: 12,
+          cornerRadius: 14,
           displayColors: true,
           callbacks: {
             label: function(context) {
@@ -670,7 +712,7 @@ onMounted(() => {
   renderChart();
 });
 
-watch([timeframe, () => props.incomeList, () => props.nokosList], () => {
+watch([timeframe, chartType, () => props.incomeList, () => props.nokosList], () => {
   renderChart();
 }, { deep: true });
 

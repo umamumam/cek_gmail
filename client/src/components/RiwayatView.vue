@@ -1,31 +1,93 @@
 <template>
   <div class="space-y-6">
     
-    <!-- Top Summary Banner -->
-    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-      <div class="saas-card p-5">
-        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Total Checked History</span>
-        <span class="text-2xl font-black text-slate-900 font-mono mt-1 block">{{ history.length }}</span>
-        <span class="text-[11px] text-slate-400">Total email tersimpan</span>
+    <!-- Top Premium Summary Banner Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      
+      <!-- 1. Total Checked History -->
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 p-5 text-white shadow-md shadow-slate-950/20 hover:shadow-lg transition-all duration-200 group">
+        <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-blue-500/20 rounded-full blur-2xl group-hover:bg-blue-500/30 transition"></div>
+        <div class="flex items-center justify-between relative z-10">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+            <span class="text-[11px] font-extrabold text-slate-300 uppercase tracking-wider">Total Checked</span>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md text-blue-300 flex items-center justify-center border border-white/15 group-hover:scale-105 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+        </div>
+        <div class="mt-3 relative z-10">
+          <span class="text-2xl font-black font-mono tracking-tight text-white block">{{ history.length }}</span>
+          <div class="flex items-center justify-between mt-2 pt-2 border-t border-white/10 text-[11px]">
+            <span class="text-slate-300 font-medium">Tersimpan di sistem</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-400/20 text-blue-300 border border-blue-400/30">DATABASE</span>
+          </div>
+        </div>
       </div>
 
-      <div class="saas-card p-5 border-l-4 border-l-emerald-500">
-        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Live Emails</span>
-        <span class="text-2xl font-black text-emerald-700 font-mono mt-1 block">{{ liveCount }}</span>
-        <span class="text-[11px] text-emerald-600 font-semibold">Ready for outreach</span>
+      <!-- 2. Live Emails -->
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500/10 via-white to-emerald-500/5 p-5 border border-emerald-200/80 shadow-sm hover:shadow-md transition-all duration-200 group">
+        <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition"></div>
+        <div class="flex items-center justify-between relative z-10">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span class="text-[11px] font-extrabold text-emerald-800 uppercase tracking-wider">Live Emails</span>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center shadow-md shadow-emerald-500/30 group-hover:scale-105 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+        </div>
+        <div class="mt-3 relative z-10">
+          <span class="text-2xl font-black text-slate-900 font-mono tracking-tight block">{{ liveCount }}</span>
+          <div class="flex items-center justify-between mt-2 pt-2 border-t border-emerald-100 text-[11px]">
+            <span class="text-emerald-700 font-bold">Siap Digunakan</span>
+            <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px]">ACTIVE</span>
+          </div>
+        </div>
       </div>
 
-      <div class="saas-card p-5 border-l-4 border-l-rose-500">
-        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Disabled (Die)</span>
-        <span class="text-2xl font-black text-rose-700 font-mono mt-1 block">{{ dieCount }}</span>
-        <span class="text-[11px] text-rose-600 font-semibold">High bounce risk</span>
+      <!-- 3. Disabled (Die) -->
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-rose-500/10 via-white to-rose-500/5 p-5 border border-rose-200/80 shadow-sm hover:shadow-md transition-all duration-200 group">
+        <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-rose-500/10 rounded-full blur-2xl group-hover:bg-rose-500/20 transition"></div>
+        <div class="flex items-center justify-between relative z-10">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+            <span class="text-[11px] font-extrabold text-rose-800 uppercase tracking-wider">Disabled (Die)</span>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-rose-500 text-white flex items-center justify-center shadow-md shadow-rose-500/30 group-hover:scale-105 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </div>
+        </div>
+        <div class="mt-3 relative z-10">
+          <span class="text-2xl font-black text-slate-900 font-mono tracking-tight block">{{ dieCount }}</span>
+          <div class="flex items-center justify-between mt-2 pt-2 border-t border-rose-100 text-[11px]">
+            <span class="text-rose-700 font-bold">Risiko Bounce</span>
+            <span class="px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 font-bold text-[10px]">NONAKTIF</span>
+          </div>
+        </div>
       </div>
 
-      <div class="saas-card p-5 border-l-4 border-l-amber-500">
-        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Verify Phone</span>
-        <span class="text-2xl font-black text-amber-700 font-mono mt-1 block">{{ verifyCount }}</span>
-        <span class="text-[11px] text-amber-600 font-semibold">Require 2FA</span>
+      <!-- 4. Verify Phone (2FA) -->
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500/10 via-white to-amber-500/5 p-5 border border-amber-200/80 shadow-sm hover:shadow-md transition-all duration-200 group">
+        <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-amber-500/10 rounded-full blur-2xl group-hover:bg-amber-500/20 transition"></div>
+        <div class="flex items-center justify-between relative z-10">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+            <span class="text-[11px] font-extrabold text-amber-800 uppercase tracking-wider">Verify Phone</span>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center shadow-md shadow-amber-500/30 group-hover:scale-105 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          </div>
+        </div>
+        <div class="mt-3 relative z-10">
+          <span class="text-2xl font-black text-slate-900 font-mono tracking-tight block">{{ verifyCount }}</span>
+          <div class="flex items-center justify-between mt-2 pt-2 border-t border-amber-100 text-[11px]">
+            <span class="text-amber-700 font-bold">Butuh SMS OTP</span>
+            <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold text-[10px]">VERIFY 2FA</span>
+          </div>
+        </div>
       </div>
+
     </div>
 
     <!-- Main Table Container -->
@@ -98,37 +160,28 @@
               <td class="py-3 px-4 font-mono text-slate-400">{{ idx + 1 }}</td>
               <td class="py-3 px-4">
                 <div class="font-semibold text-slate-900 font-mono">{{ row.email }}</div>
-                <div class="text-[11px] text-slate-400 font-mono">Domain: {{ row.domain || '-' }}</div>
               </td>
-
-              <!-- Status Badge -->
               <td class="py-3 px-4">
                 <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold uppercase" :class="getStatusBadgeClass(row.checkmailStatus)">
                   <span class="w-1.5 h-1.5 rounded-full" :class="getStatusDotClass(row.checkmailStatus)"></span>
-                  {{ row.badgeLabel }}
+                  {{ getStatusLabel(row.checkmailStatus) }}
                 </span>
               </td>
-
-              <!-- Raw Response -->
-              <td class="py-3 px-4 font-mono font-bold text-slate-700">
-                {{ row.rawStatus }}
+              <td class="py-3 px-4 text-slate-500 font-mono text-[11px]">
+                {{ row.rawResponse || '-' }}
               </td>
-
-              <!-- Timestamp -->
-              <td class="py-3 px-4 font-mono text-slate-500">
-                {{ row.checkedAt }}
+              <td class="py-3 px-4 font-mono text-slate-600">
+                {{ row.checkedAt || '-' }}
               </td>
-
-              <!-- Actions -->
-              <td class="py-3 px-4 text-right space-x-1.5">
+              <td class="py-3 px-4 text-right space-x-2">
                 <button
                   @click="$emit('openDetail', row)"
-                  class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition cursor-pointer">
-                  Detail Audit
+                  class="text-blue-600 hover:text-blue-800 font-semibold cursor-pointer">
+                  Detail
                 </button>
                 <button
                   @click="$emit('addToLedger', row)"
-                  class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-blue-50 border border-blue-200 text-blue-700 hover:bg-blue-100 transition cursor-pointer">
+                  class="text-purple-600 hover:text-purple-800 font-semibold cursor-pointer">
                   + Ledger
                 </button>
               </td>
@@ -142,9 +195,9 @@
         <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
-        <h4 class="font-bold text-slate-800 text-sm">Belum Ada Riwayat Pengecekan</h4>
+        <h4 class="font-bold text-slate-800 text-sm">Riwayat Email Masih Kosong</h4>
         <p class="text-xs text-slate-400 max-w-sm mx-auto">
-          Setiap pengecekan email yang Anda lakukan di menu "Cek Email" akan tercatat secara otomatis di sini.
+          Lakukan verifikasi email pada menu Cek Email untuk mulai mencatat riwayat keaktifan email.
         </p>
       </div>
     </div>
@@ -165,32 +218,32 @@ const activeFilter = ref('all');
 const searchQuery = ref('');
 
 const filterTabs = [
-  { label: 'Semua', value: 'all' },
-  { label: 'Live (Valid)', value: 'live' },
+  { label: 'Semua Riwayat', value: 'all' },
+  { label: 'Live Active', value: 'live' },
   { label: 'Verify Phone', value: 'verify_phone' },
   { label: 'Disabled (Die)', value: 'die' },
   { label: 'Unregistered', value: 'not_exist' }
 ];
 
-const liveCount = computed(() => props.history.filter(r => r.checkmailStatus === 'live').length);
-const dieCount = computed(() => props.history.filter(r => r.checkmailStatus === 'die').length);
-const verifyCount = computed(() => props.history.filter(r => r.checkmailStatus === 'verify_phone').length);
+const liveCount = computed(() => props.history.filter(h => h.checkmailStatus === 'live').length);
+const verifyCount = computed(() => props.history.filter(h => h.checkmailStatus === 'verify_phone').length);
+const dieCount = computed(() => props.history.filter(h => h.checkmailStatus === 'die').length);
 
 const filteredHistory = computed(() => {
   let list = props.history;
   if (activeFilter.value !== 'all') {
-    list = list.filter(r => r.checkmailStatus === activeFilter.value);
+    list = list.filter(h => h.checkmailStatus === activeFilter.value);
   }
   if (searchQuery.value.trim()) {
     const q = searchQuery.value.toLowerCase().trim();
-    list = list.filter(r => r.email.toLowerCase().includes(q) || (r.domain && r.domain.toLowerCase().includes(q)));
+    list = list.filter(h => h.email.toLowerCase().includes(q));
   }
   return list;
 });
 
 function getCount(val) {
   if (val === 'all') return props.history.length;
-  return props.history.filter(r => r.checkmailStatus === val).length;
+  return props.history.filter(h => h.checkmailStatus === val).length;
 }
 
 function getStatusBadgeClass(status) {
@@ -198,7 +251,8 @@ function getStatusBadgeClass(status) {
     case 'live': return 'badge-valid';
     case 'verify_phone': return 'badge-risky';
     case 'die': return 'badge-invalid';
-    case 'not_exist': case 'error': default: return 'badge-unregistered';
+    case 'not_exist': return 'badge-unregistered';
+    default: return 'bg-slate-100 text-slate-600 border border-slate-200';
   }
 }
 
@@ -208,6 +262,16 @@ function getStatusDotClass(status) {
     case 'verify_phone': return 'bg-amber-500';
     case 'die': return 'bg-rose-500';
     default: return 'bg-slate-400';
+  }
+}
+
+function getStatusLabel(status) {
+  switch (status) {
+    case 'live': return 'LIVE (ACTIVE)';
+    case 'verify_phone': return 'VERIFY PHONE';
+    case 'die': return 'DISABLED (DIE)';
+    case 'not_exist': return 'UNREGISTERED';
+    default: return 'UNKNOWN';
   }
 }
 </script>
