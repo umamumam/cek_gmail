@@ -50,6 +50,8 @@ app.get('/api/netnit-credits', (req, res) => {
     api_credits_remaining: cachedCredits.api_credits_remaining
   });
 });
+
+/**
  * Netnit API Proxy Endpoint (/api/netnit-check)
  * Accepts:
  * - mail: string[]
