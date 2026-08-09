@@ -563,9 +563,12 @@ const visiblePassMap = ref({});
 
 const filterTabs = [
   { label: "NEW", value: "new" },
+  { label: "Semua Ledger", value: "all" },
   { label: "Siap Setor", value: "siap_setor" },
-  { label: "Selesai", value: "sudah_setor" },
-  { label: "Semua Ledger", value: "all" }
+  { label: "Setor Tgl", value: "setor_tgl" },
+  { label: "Sudah Setor", value: "sudah_setor" },
+  { label: "Akun Ortu", value: "akun_ortu" },
+  { label: "Live Verified", value: "live" },
 ];
 
 const newCount = computed(
