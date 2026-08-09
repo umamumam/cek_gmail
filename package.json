@@ -1,0 +1,29 @@
+{
+  "name": "cek-gmail-hygiene-tool",
+  "version": "1.0.0",
+  "description": "Email Validation & Hygiene Tool (RFC 5322, DNS MX Lookup, Disposable Email Detection)",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "server": "node server/server.js",
+    "client": "npm --prefix client run dev",
+    "build": "npm --prefix client run build",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": [
+    "email-validation",
+    "email-hygiene",
+    "mx-lookup",
+    "dns-check",
+    "disposable-email"
+  ],
+  "author": "",
+  "license": "ISC"
+}
