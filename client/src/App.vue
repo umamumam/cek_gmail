@@ -60,8 +60,11 @@
             :checkHistory="checkHistory"
             :ledger="emailLedger"
             :nokosList="nokosHistory"
+            :incomeList="incomeHistory"
             @addNokos="addNokosTopUp"
-            @deleteNokos="deleteNokosTopUp" />
+            @deleteNokos="deleteNokosTopUp"
+            @addIncome="addIncomeRecord"
+            @deleteIncome="deleteIncomeRecord" />
 
           <!-- Tab 1: Cek Email (Bulk Verification Hub) -->
           <CekEmailView
@@ -218,6 +221,7 @@ const checkHistory = ref(JSON.parse(localStorage.getItem('cekgmail_history') || 
 const statusChangeLogs = ref(JSON.parse(localStorage.getItem('cekgmail_changes') || '[]'));
 const emailLedger = ref(JSON.parse(localStorage.getItem('cekgmail_ledger') || '[]'));
 const nokosHistory = ref(JSON.parse(localStorage.getItem('cekgmail_nokos') || '[]'));
+const incomeHistory = ref(JSON.parse(localStorage.getItem('cekgmail_income') || '[]'));
 
 // Persistent Credits Cache
 const savedCredits = JSON.parse(localStorage.getItem('cekgmail_credits') || '{}');
@@ -265,6 +269,7 @@ function saveState() {
   localStorage.setItem('cekgmail_changes', JSON.stringify(statusChangeLogs.value));
   localStorage.setItem('cekgmail_ledger', JSON.stringify(emailLedger.value));
   localStorage.setItem('cekgmail_nokos', JSON.stringify(nokosHistory.value));
+  localStorage.setItem('cekgmail_income', JSON.stringify(incomeHistory.value));
   localStorage.setItem('cekgmail_credits', JSON.stringify({ apiCredits: apiCredits.value, subCredits: subCredits.value }));
 }
 
@@ -670,6 +675,19 @@ function deleteNokosTopUp(id) {
   nokosHistory.value = nokosHistory.value.filter(n => n.id !== id);
   saveState();
   showToast('Catatan Top Up Nokos dihapus.');
+}
+
+// Income Handlers
+function addIncomeRecord(item) {
+  incomeHistory.value.unshift(item);
+  saveState();
+  showToast(`Catatan Pendapatan ${item.sumber} berhasil disimpan.`);
+}
+
+function deleteIncomeRecord(id) {
+  incomeHistory.value = incomeHistory.value.filter(inc => inc.id !== id);
+  saveState();
+  showToast('Catatan Pendapatan dihapus.');
 }
 
 function addToLedgerSingle(item) {

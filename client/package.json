@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "cek-gmail-hygiene-tool": "file:..",
+    "chart.js": "^4.5.1",
     "lucide-vue-next": "^0.344.0",
     "vue": "^3.4.21",
     "xlsx": "^0.18.5"
