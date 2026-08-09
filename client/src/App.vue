@@ -626,7 +626,7 @@ function getFormattedDate() {
 }
 
 // Ledger Operations
-function addLedgerEmails(rawText, defaultSetor = 'new', customDate = null) {
+function addLedgerEmails(rawText, defaultSetor = 'new', customDate = null, defaultPass = '') {
   const items = extractEmailsAndPasswords(rawText);
   let addedCount = 0;
   const nowStr = getFormattedDate();
@@ -641,10 +641,12 @@ function addLedgerEmails(rawText, defaultSetor = 'new', customDate = null) {
       tgl = nowStr;
     }
 
+    const finalPass = password || defaultPass || '';
+
     if (idx === -1) {
       emailLedger.value.unshift({
         email: cleanEmail,
-        password: password || '',
+        password: finalPass,
         setorStatus: defaultSetor,
         tglSetor: tgl,
         verifyStatus: 'unchecked',
@@ -653,7 +655,7 @@ function addLedgerEmails(rawText, defaultSetor = 'new', customDate = null) {
       addedCount++;
     } else {
       emailLedger.value[idx].setorStatus = defaultSetor;
-      if (password) emailLedger.value[idx].password = password;
+      if (finalPass) emailLedger.value[idx].password = finalPass;
       if (tgl) emailLedger.value[idx].tglSetor = tgl;
       emailLedger.value[idx].updatedAt = nowStr;
     }

@@ -112,7 +112,7 @@
           <textarea
             v-model="newEmailsText"
             rows="3"
-            placeholder="Tambahkan email (dan password) di sini...&#10;Contoh format:&#10;user1@gmail.com|pass123&#10;user2@gmail.com:myPass#99&#10;user3@gmail.com"
+            placeholder="Tambahkan email di sini (pisahkan per baris)...&#10;Bisa juga format email|password atau email:password"
             class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs font-mono text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 transition resize-y"></textarea>
         </div>
 
@@ -125,13 +125,25 @@
               >
               <select
                 v-model="defaultSetorStatus"
-                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500">
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500">
                 <option value="new">⚪ NEW</option>
                 <option value="siap_setor">🔵 Siap Setor</option>
                 <option value="setor_tgl">📅 Setor Tgl...</option>
                 <option value="sudah_setor">✅ Sudah Setor</option>
                 <option value="akun_ortu">👨‍👩‍👧 Akun Ortu</option>
               </select>
+            </div>
+
+            <div>
+              <label
+                class="block text-[11px] font-bold text-slate-600 uppercase mb-1"
+                >Password Keseluruhan (Opsional):</label
+              >
+              <input
+                v-model="defaultPassword"
+                type="text"
+                placeholder="Password seragam..."
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-mono text-slate-800 focus:outline-none focus:border-blue-500" />
             </div>
 
             <!-- Date picker input if Setor Tgl selected -->
@@ -143,7 +155,7 @@
               <input
                 v-model="customInputDate"
                 type="date"
-                class="w-full bg-white border border-indigo-200 rounded-xl px-2.5 py-1.5 text-xs text-indigo-900 font-semibold focus:outline-none focus:border-indigo-500" />
+                class="w-full bg-white border border-indigo-200 rounded-xl px-2.5 py-1 text-xs text-indigo-900 font-semibold focus:outline-none focus:border-indigo-500" />
             </div>
           </div>
 
@@ -172,30 +184,29 @@
       <!-- Table Filters & Batch Controls -->
       <div
         class="p-4 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50/60">
-        <!-- Filter Pills -->
-        <div
-          class="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 overflow-x-auto">
-          <button
-            v-for="tab in filterTabs"
-            :key="tab.value"
-            @click="activeFilter = tab.value"
-            class="px-3 py-1 rounded-lg text-xs font-semibold transition cursor-pointer whitespace-nowrap"
-            :class="
-              activeFilter === tab.value
-                ? 'bg-blue-600 text-white font-bold'
-                : 'text-slate-600 hover:text-slate-900'
-            ">
-            {{ tab.label }} ({{ getFilterCount(tab.value) }})
-          </button>
+        <!-- Streamlined Dropdown Filter -->
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Filter:</span>
+          <select
+            v-model="activeFilter"
+            class="bg-white border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500 shadow-xs cursor-pointer">
+            <option value="new">⚪ NEW ({{ newCount }})</option>
+            <option value="all">📂 Semua Ledger ({{ props.ledger.length }})</option>
+            <option value="siap_setor">🔵 Siap Setor ({{ siapSetorCount }})</option>
+            <option value="setor_tgl">📅 Setor Tgl ({{ setorTglCount }})</option>
+            <option value="sudah_setor">✅ Sudah Setor ({{ sudahSetorCount }})</option>
+            <option value="akun_ortu">👨‍👩‍👧 Akun Ortu ({{ akunOrtuCount }})</option>
+            <option value="live">🟢 Live Verified ({{ liveInLedgerCount }})</option>
+          </select>
         </div>
 
-        <!-- Search & Actions -->
+        <!-- Search & Compact Actions -->
         <div class="flex items-center gap-2 flex-wrap">
           <div class="relative flex-1 sm:w-44">
             <input
               v-model="searchQuery"
               type="text"
-              placeholder="Cari email ledger..."
+              placeholder="Cari email..."
               class="w-full bg-white border border-slate-200 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition" />
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -210,59 +221,40 @@
           </div>
 
           <!-- Bulk Keterangan Selector -->
-          <div class="relative inline-block">
-            <select
-              @change="
-                handleBatchKeterangan($event.target.value);
-                $event.target.value = '';
-              "
-              :disabled="selectedEmails.length === 0"
-              class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition cursor-pointer disabled:opacity-40 focus:outline-none">
-              <option value="" disabled selected>
-                Ubah Keterangan ({{ selectedEmails.length }}) ▼
-              </option>
-              <option value="new">⚪ Set NEW</option>
-              <option value="siap_setor">🔵 Set Siap Setor</option>
-              <option value="setor_tgl">📅 Set Setor Tgl...</option>
-              <option value="sudah_setor">✅ Set Sudah Setor</option>
-              <option value="akun_ortu">👨‍👩‍👧 Set Akun Ortu</option>
-            </select>
-          </div>
+          <select
+            @change="
+              handleBatchKeterangan($event.target.value);
+              $event.target.value = '';
+            "
+            :disabled="selectedEmails.length === 0"
+            class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition cursor-pointer disabled:opacity-40 focus:outline-none">
+            <option value="" disabled selected>
+              Ubah Status ({{ selectedEmails.length }}) ▼
+            </option>
+            <option value="new">⚪ Set NEW</option>
+            <option value="siap_setor">🔵 Set Siap Setor</option>
+            <option value="setor_tgl">📅 Set Setor Tgl...</option>
+            <option value="sudah_setor">✅ Set Sudah Setor</option>
+            <option value="akun_ortu">👨‍👩‍👧 Set Akun Ortu</option>
+          </select>
 
           <button
             @click="$emit('checkSelectedLedger', selectedEmails)"
             :disabled="selectedEmails.length === 0"
             class="px-3 py-1.5 rounded-xl text-xs font-bold btn-primary cursor-pointer disabled:opacity-40">
-            Cek Terpilih ({{ selectedEmails.length }})
-          </button>
-
-          <button
-            @click="toggleShowAllPasswords"
-            class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer flex items-center gap-1">
-            <span>{{ showAllPasswords ? '🙈 Sembunyikan Passwords' : '👁️ Intip Passwords' }}</span>
+            Cek ({{ selectedEmails.length }})
           </button>
 
           <button
             @click="exportLedgerExcel"
-            class="px-3 py-1.5 rounded-xl text-xs btn-secondary cursor-pointer flex items-center gap-1.5">
-            <svg
-              class="w-3.5 h-3.5 text-emerald-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            Ekspor Excel
+            class="px-3 py-1.5 rounded-xl text-xs btn-secondary cursor-pointer flex items-center gap-1">
+            <span>Ekspor .xlsx</span>
           </button>
 
           <button
             @click="$emit('clearLedger')"
             :disabled="ledger.length === 0"
-            class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white text-rose-600 border border-slate-200 hover:bg-rose-50 transition cursor-pointer disabled:opacity-40">
+            class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-white text-rose-600 border border-slate-200 hover:bg-rose-50 transition cursor-pointer disabled:opacity-40">
             Kosongkan
           </button>
         </div>
@@ -282,7 +274,18 @@
                   class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer" />
               </th>
               <th class="py-3 px-4">Email Address</th>
-              <th class="py-3 px-4">Password</th>
+              <th class="py-3 px-4 w-36">
+                <div class="flex items-center gap-1">
+                  <span>Password</span>
+                  <button
+                    @click="toggleShowAllPasswords"
+                    type="button"
+                    title="Intip / Sembunyikan Semua Password"
+                    class="text-xs text-slate-400 hover:text-blue-600 cursor-pointer ml-1">
+                    {{ showAllPasswords ? '👁️' : '🙈' }}
+                  </button>
+                </div>
+              </th>
               <th class="py-3 px-4">Keterangan / Status</th>
               <th class="py-3 px-4">Tanggal Setor</th>
               <th class="py-3 px-4">Hasil Live Check</th>
@@ -313,38 +316,33 @@
                 </div>
               </td>
 
-              <!-- Password Column (Hidden by default with Eye toggle) -->
-              <td class="py-3.5 px-4">
-                <div class="flex items-center gap-1.5 min-w-[130px]">
-                  <div class="relative flex-1">
-                    <input
-                      :type="isPasswordVisible(row.email) ? 'text' : 'password'"
-                      :value="row.password || ''"
-                      @change="handleRowPasswordChange(row, $event.target.value)"
-                      placeholder="Password..."
-                      class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs font-mono text-slate-800 focus:outline-none focus:bg-white focus:border-blue-500 transition" />
-                  </div>
-
-                  <!-- Toggle Eye Button -->
+              <!-- Compact Password Column (Narrow & Clean) -->
+              <td class="py-3.5 px-4 font-mono">
+                <div v-if="row.password" class="flex items-center gap-1.5 max-w-[130px]">
+                  <span class="text-xs font-semibold text-slate-800 truncate font-mono select-all">
+                    {{ isPasswordVisible(row.email) ? row.password : '••••••••' }}
+                  </span>
                   <button
                     @click="toggleShowPassword(row.email)"
                     type="button"
-                    title="Lihat / Sembunyikan Password"
-                    class="p-1 text-slate-400 hover:text-slate-700 transition cursor-pointer">
-                    <svg v-if="isPasswordVisible(row.email)" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                    <svg v-else xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                    class="text-slate-400 hover:text-blue-600 text-xs p-0.5 cursor-pointer flex-shrink-0"
+                    title="Intip Password">
+                    {{ isPasswordVisible(row.email) ? '👁️' : '🙈' }}
                   </button>
-
-                  <!-- Copy Password Button -->
                   <button
-                    v-if="row.password"
                     @click="copyPasswordText(row.password)"
                     type="button"
-                    title="Salin Password"
-                    class="p-1 text-slate-400 hover:text-blue-600 transition cursor-pointer">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    class="text-slate-400 hover:text-emerald-600 text-xs p-0.5 cursor-pointer flex-shrink-0"
+                    title="Salin Password">
+                    📋
                   </button>
                 </div>
+                <button
+                  v-else
+                  @click="promptAddPassword(row)"
+                  class="text-[11px] text-slate-400 hover:text-blue-600 font-semibold cursor-pointer">
+                  + Password
+                </button>
               </td>
 
               <!-- Keterangan Status Dropdown Selector -->
@@ -487,6 +485,7 @@ const emit = defineEmits([
 
 const newEmailsText = ref("");
 const defaultSetorStatus = ref("new");
+const defaultPassword = ref("");
 const customInputDate = ref(new Date().toISOString().slice(0, 10));
 const activeFilter = ref("new");
 const searchQuery = ref("");
@@ -588,8 +587,10 @@ function handleAddEmails() {
     newEmailsText.value,
     defaultSetorStatus.value,
     formattedDate,
+    defaultPassword.value.trim()
   );
   newEmailsText.value = "";
+  defaultPassword.value = "";
 }
 
 function handleBatchKeterangan(newStatus) {
@@ -653,6 +654,13 @@ function handleRowDateChange(row, dateVal) {
     tglSetor: formatted,
     updatedAt: getFormattedDate(),
   });
+}
+
+function promptAddPassword(row) {
+  const input = prompt(`Masukkan password untuk ${row.email}:`, row.password || "");
+  if (input !== null) {
+    handleRowPasswordChange(row, input);
+  }
 }
 
 function handleRowPasswordChange(row, newPassword) {
