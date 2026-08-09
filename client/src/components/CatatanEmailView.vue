@@ -112,7 +112,7 @@
           <textarea
             v-model="newEmailsText"
             rows="3"
-            placeholder="Tambahkan email di sini...&#10;user1@gmail.com&#10;user2@gmail.com"
+            placeholder="Tambahkan email (dan password) di sini...&#10;Contoh format:&#10;user1@gmail.com|pass123&#10;user2@gmail.com:myPass#99&#10;user3@gmail.com"
             class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs font-mono text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 transition resize-y"></textarea>
         </div>
 
@@ -237,6 +237,12 @@
           </button>
 
           <button
+            @click="toggleShowAllPasswords"
+            class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer flex items-center gap-1">
+            <span>{{ showAllPasswords ? '🙈 Sembunyikan Passwords' : '👁️ Intip Passwords' }}</span>
+          </button>
+
+          <button
             @click="exportLedgerExcel"
             class="px-3 py-1.5 rounded-xl text-xs btn-secondary cursor-pointer flex items-center gap-1.5">
             <svg
@@ -276,6 +282,7 @@
                   class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer" />
               </th>
               <th class="py-3 px-4">Email Address</th>
+              <th class="py-3 px-4">Password</th>
               <th class="py-3 px-4">Keterangan / Status</th>
               <th class="py-3 px-4">Tanggal Setor</th>
               <th class="py-3 px-4">Hasil Live Check</th>
@@ -303,6 +310,40 @@
               <td class="py-3.5 px-4">
                 <div class="font-semibold text-slate-900 font-mono">
                   {{ row.email }}
+                </div>
+              </td>
+
+              <!-- Password Column (Hidden by default with Eye toggle) -->
+              <td class="py-3.5 px-4">
+                <div class="flex items-center gap-1.5 min-w-[130px]">
+                  <div class="relative flex-1">
+                    <input
+                      :type="isPasswordVisible(row.email) ? 'text' : 'password'"
+                      :value="row.password || ''"
+                      @change="handleRowPasswordChange(row, $event.target.value)"
+                      placeholder="Password..."
+                      class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs font-mono text-slate-800 focus:outline-none focus:bg-white focus:border-blue-500 transition" />
+                  </div>
+
+                  <!-- Toggle Eye Button -->
+                  <button
+                    @click="toggleShowPassword(row.email)"
+                    type="button"
+                    title="Lihat / Sembunyikan Password"
+                    class="p-1 text-slate-400 hover:text-slate-700 transition cursor-pointer">
+                    <svg v-if="isPasswordVisible(row.email)" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg v-else xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                  </button>
+
+                  <!-- Copy Password Button -->
+                  <button
+                    v-if="row.password"
+                    @click="copyPasswordText(row.password)"
+                    type="button"
+                    title="Salin Password"
+                    class="p-1 text-slate-400 hover:text-blue-600 transition cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  </button>
                 </div>
               </td>
 
@@ -450,6 +491,8 @@ const customInputDate = ref(new Date().toISOString().slice(0, 10));
 const activeFilter = ref("new");
 const searchQuery = ref("");
 const selectedEmails = ref([]);
+const showAllPasswords = ref(false);
+const visiblePassMap = ref({});
 
 const filterTabs = [
   { label: "NEW", value: "new" },
@@ -612,6 +655,32 @@ function handleRowDateChange(row, dateVal) {
   });
 }
 
+function handleRowPasswordChange(row, newPassword) {
+  emit("updateLedgerRow", {
+    ...row,
+    password: newPassword.trim(),
+    updatedAt: getFormattedDate(),
+  });
+}
+
+function isPasswordVisible(email) {
+  return showAllPasswords.value || !!visiblePassMap.value[email];
+}
+
+function toggleShowPassword(email) {
+  visiblePassMap.value[email] = !visiblePassMap.value[email];
+}
+
+function toggleShowAllPasswords() {
+  showAllPasswords.value = !showAllPasswords.value;
+}
+
+function copyPasswordText(pass) {
+  if (!pass) return;
+  navigator.clipboard.writeText(pass);
+  alert('Password berhasil disalin!');
+}
+
 function deleteFromLedger(email) {
   emit("deleteLedgerEmail", email);
   selectedEmails.value = selectedEmails.value.filter((e) => e !== email);
@@ -762,6 +831,7 @@ function exportLedgerExcel() {
   const data = props.ledger.map((l, idx) => ({
     No: idx + 1,
     Email: l.email,
+    Password: l.password || "-",
     "Keterangan / Status": getKeteranganLabel(l.setorStatus),
     "Tanggal Setor": l.tglSetor || "-",
     "Hasil Live Check": getVerifyStatusLabel(l.verifyStatus),
@@ -774,9 +844,10 @@ function exportLedgerExcel() {
   worksheet["!cols"] = [
     { wch: 6 },
     { wch: 32 },
+    { wch: 20 },
     { wch: 18 },
     { wch: 20 },
-    { wch: 20 },
+    { wch: 22 },
     { wch: 22 },
   ];
 

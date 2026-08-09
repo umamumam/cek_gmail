@@ -315,18 +315,45 @@ function openDetailDrawer(item) {
 function extractEmails(text) {
   if (!text) return [];
   return text
-    .split(/[\n,;]+/)
-    .map(e => e.trim())
+    .split(/[\r\n,;]+/)
+    .map(line => {
+      const parts = line.trim().split(/[|:\t\s,]+/);
+      const emailPart = parts.find(p => p.includes('@'));
+      return emailPart ? emailPart.trim().toLowerCase() : '';
+    })
     .filter(e => e && e.includes('@'));
+}
+
+function extractEmailsAndPasswords(text) {
+  if (!text) return [];
+  const lines = text.split(/[\r\n]+/);
+  const results = [];
+  lines.forEach(line => {
+    if (!line || !line.trim()) return;
+    const trimmed = line.trim();
+    const parts = trimmed.split(/[|:\t,]+/);
+    const emailIndex = parts.findIndex(p => p.includes('@'));
+    if (emailIndex !== -1) {
+      const cleanEmail = parts[emailIndex].trim().toLowerCase();
+      let pass = '';
+      if (parts.length > emailIndex + 1) {
+        pass = parts[emailIndex + 1].trim();
+      } else if (emailIndex > 0) {
+        pass = parts[0].trim();
+      }
+      results.push({ email: cleanEmail, password: pass });
+    }
+  });
+  return results;
 }
 
 // Sample Loader
 const sampleEmails = [
-  'alex.developer@gmail.com',
-  'support.team@gmail.com',
-  'disabled.account@gmail.com',
-  'test.phone.ver@gmail.com',
-  'unregistered987654321@gmail.com'
+  'alex.developer@gmail.com|secretPass123',
+  'support.team@gmail.com|adminPass999',
+  'disabled.account@gmail.com|oldPass555',
+  'test.phone.ver@gmail.com|passOTP777',
+  'unregistered987654321@gmail.com|testPass123'
 ].join('\n');
 
 function loadSampleEmails() {
@@ -600,11 +627,11 @@ function getFormattedDate() {
 
 // Ledger Operations
 function addLedgerEmails(rawText, defaultSetor = 'new', customDate = null) {
-  const list = extractEmails(rawText);
+  const items = extractEmailsAndPasswords(rawText);
   let addedCount = 0;
   const nowStr = getFormattedDate();
 
-  list.forEach(email => {
+  items.forEach(({ email, password }) => {
     const cleanEmail = email.toLowerCase().trim();
     const idx = emailLedger.value.findIndex(l => l.email === cleanEmail);
     let tgl = null;
@@ -617,6 +644,7 @@ function addLedgerEmails(rawText, defaultSetor = 'new', customDate = null) {
     if (idx === -1) {
       emailLedger.value.unshift({
         email: cleanEmail,
+        password: password || '',
         setorStatus: defaultSetor,
         tglSetor: tgl,
         verifyStatus: 'unchecked',
@@ -625,6 +653,7 @@ function addLedgerEmails(rawText, defaultSetor = 'new', customDate = null) {
       addedCount++;
     } else {
       emailLedger.value[idx].setorStatus = defaultSetor;
+      if (password) emailLedger.value[idx].password = password;
       if (tgl) emailLedger.value[idx].tglSetor = tgl;
       emailLedger.value[idx].updatedAt = nowStr;
     }
