@@ -461,7 +461,7 @@ const formIncomeNominal = ref(null);
 const formIncomeCatatan = ref('');
 
 const totalLedger = computed(() => props.ledger.length);
-const newLedgerCount = computed(() => props.ledger.filter(l => l.setorStatus === 'new' || !l.setorStatus).length);
+const newLedgerCount = computed(() => props.ledger.filter(l => l.setorStatus === 'new' || l.setorStatus === 'belum_disetor' || !l.setorStatus).length);
 
 const totalNokosAmount = computed(() => props.nokosList.reduce((acc, curr) => acc + (Number(curr.nominal) || 0), 0));
 const totalIncomeAmount = computed(() => props.incomeList.reduce((acc, curr) => acc + (Number(curr.nominal) || 0), 0));

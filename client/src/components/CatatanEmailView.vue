@@ -471,8 +471,12 @@ const filterTabs = [
 
 const newCount = computed(
   () =>
-    props.ledger.filter((l) => l.setorStatus === "new" || !l.setorStatus)
-      .length,
+    props.ledger.filter(
+      (l) =>
+        l.setorStatus === "new" ||
+        l.setorStatus === "belum_disetor" ||
+        !l.setorStatus,
+    ).length,
 );
 const siapSetorCount = computed(
   () => props.ledger.filter((l) => l.setorStatus === "siap_setor").length,
@@ -496,7 +500,12 @@ const liveInLedgerCount = computed(
 const filteredLedger = computed(() => {
   let list = props.ledger;
   if (activeFilter.value === "new") {
-    list = list.filter((l) => l.setorStatus === "new" || !l.setorStatus);
+    list = list.filter(
+      (l) =>
+        l.setorStatus === "new" ||
+        l.setorStatus === "belum_disetor" ||
+        !l.setorStatus,
+    );
   } else if (activeFilter.value === "siap_setor") {
     list = list.filter((l) => l.setorStatus === "siap_setor");
   } else if (activeFilter.value === "setor_tgl") {
