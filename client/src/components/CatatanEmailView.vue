@@ -2,35 +2,41 @@
   <div class="space-y-6">
     
     <!-- Top Ledger Stats Summary -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-      <div class="saas-card p-4">
-        <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Total Ledger</span>
-        <span class="text-2xl font-black text-slate-900 font-mono mt-1 block">{{ ledger.length }}</span>
-        <span class="text-[10px] text-slate-400">Database email unik</span>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div class="saas-card p-3.5">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Total Ledger</span>
+        <span class="text-xl font-black text-slate-900 font-mono mt-0.5 block">{{ ledger.length }}</span>
+        <span class="text-[9px] text-slate-400">Database email unik</span>
       </div>
 
-      <div class="saas-card p-4 border-l-4 border-l-blue-500">
-        <span class="text-[11px] font-bold text-blue-700 uppercase tracking-wider block">Siap Setor</span>
-        <span class="text-2xl font-black text-blue-700 font-mono mt-1 block">{{ siapSetorCount }}</span>
-        <span class="text-[10px] text-blue-600 font-semibold">Siap diproses</span>
+      <div class="saas-card p-3.5 border-l-4 border-l-slate-400">
+        <span class="text-[10px] font-bold text-slate-600 uppercase tracking-wider block">NEW (Kosong)</span>
+        <span class="text-xl font-black text-slate-700 font-mono mt-0.5 block">{{ newCount }}</span>
+        <span class="text-[9px] text-slate-500 font-semibold">Status baru / belum di-set</span>
       </div>
 
-      <div class="saas-card p-4 border-l-4 border-l-indigo-500">
-        <span class="text-[11px] font-bold text-indigo-700 uppercase tracking-wider block">Setor Tgl...</span>
-        <span class="text-2xl font-black text-indigo-700 font-mono mt-1 block">{{ setorTglCount }}</span>
-        <span class="text-[10px] text-indigo-600 font-semibold">Jadwal tanggal</span>
+      <div class="saas-card p-3.5 border-l-4 border-l-blue-500">
+        <span class="text-[10px] font-bold text-blue-700 uppercase tracking-wider block">Siap Setor</span>
+        <span class="text-xl font-black text-blue-700 font-mono mt-0.5 block">{{ siapSetorCount }}</span>
+        <span class="text-[9px] text-blue-600 font-semibold">Siap diproses</span>
       </div>
 
-      <div class="saas-card p-4 border-l-4 border-l-emerald-500">
-        <span class="text-[11px] font-bold text-emerald-700 uppercase tracking-wider block">Sudah Setor</span>
-        <span class="text-2xl font-black text-emerald-700 font-mono mt-1 block">{{ sudahSetorCount }}</span>
-        <span class="text-[10px] text-emerald-600 font-semibold">Telah disetorkan</span>
+      <div class="saas-card p-3.5 border-l-4 border-l-indigo-500">
+        <span class="text-[10px] font-bold text-indigo-700 uppercase tracking-wider block">Setor Tgl...</span>
+        <span class="text-xl font-black text-indigo-700 font-mono mt-0.5 block">{{ setorTglCount }}</span>
+        <span class="text-[9px] text-indigo-600 font-semibold">Jadwal tanggal</span>
       </div>
 
-      <div class="saas-card p-4 border-l-4 border-l-purple-500">
-        <span class="text-[11px] font-bold text-purple-700 uppercase tracking-wider block">Akun Ortu</span>
-        <span class="text-2xl font-black text-purple-700 font-mono mt-1 block">{{ akunOrtuCount }}</span>
-        <span class="text-[10px] text-purple-600 font-semibold">Kategori akun ortu</span>
+      <div class="saas-card p-3.5 border-l-4 border-l-emerald-500">
+        <span class="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block">Sudah Setor</span>
+        <span class="text-xl font-black text-emerald-700 font-mono mt-0.5 block">{{ sudahSetorCount }}</span>
+        <span class="text-[9px] text-emerald-600 font-semibold">Telah disetorkan</span>
+      </div>
+
+      <div class="saas-card p-3.5 border-l-4 border-l-purple-500">
+        <span class="text-[10px] font-bold text-purple-700 uppercase tracking-wider block">Akun Ortu</span>
+        <span class="text-xl font-black text-purple-700 font-mono mt-0.5 block">{{ akunOrtuCount }}</span>
+        <span class="text-[9px] text-purple-600 font-semibold">Kategori akun ortu</span>
       </div>
     </div>
 
@@ -66,6 +72,7 @@
               <select
                 v-model="defaultSetorStatus"
                 class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500">
+                <option value="new">⚪ NEW (Status Kosong)</option>
                 <option value="siap_setor">🔵 Siap Setor</option>
                 <option value="setor_tgl">📅 Setor Tgl...</option>
                 <option value="sudah_setor">✅ Sudah Setor</option>
@@ -129,6 +136,7 @@
               :disabled="selectedEmails.length === 0"
               class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition cursor-pointer disabled:opacity-40 focus:outline-none">
               <option value="" disabled selected>Ubah Keterangan ({{ selectedEmails.length }}) ▼</option>
+              <option value="new">⚪ Set NEW (Kosong)</option>
               <option value="siap_setor">🔵 Set Siap Setor</option>
               <option value="setor_tgl">📅 Set Setor Tgl...</option>
               <option value="sudah_setor">✅ Set Sudah Setor</option>
@@ -205,10 +213,11 @@
               <td class="py-3.5 px-4">
                 <div class="flex items-center gap-1.5">
                   <select
-                    :value="row.setorStatus || 'siap_setor'"
+                    :value="getCleanStatusKey(row.setorStatus)"
                     @change="handleRowStatusChange(row, $event.target.value)"
                     class="px-2.5 py-1 rounded-full text-xs font-bold border cursor-pointer focus:outline-none transition"
                     :class="getKeteranganBadgeClass(row.setorStatus)">
+                    <option value="new" class="bg-white text-slate-800">⚪ NEW</option>
                     <option value="siap_setor" class="bg-white text-slate-800">🔵 Siap Setor</option>
                     <option value="setor_tgl" class="bg-white text-slate-800">📅 Setor Tgl...</option>
                     <option value="sudah_setor" class="bg-white text-slate-800">✅ Sudah Setor</option>
@@ -294,7 +303,7 @@ const emit = defineEmits([
 ]);
 
 const newEmailsText = ref('');
-const defaultSetorStatus = ref('siap_setor');
+const defaultSetorStatus = ref('new');
 const customInputDate = ref(new Date().toISOString().slice(0, 10));
 const activeFilter = ref('all');
 const searchQuery = ref('');
@@ -302,6 +311,7 @@ const selectedEmails = ref([]);
 
 const filterTabs = [
   { label: 'Semua Ledger', value: 'all' },
+  { label: 'NEW (Kosong)', value: 'new' },
   { label: 'Siap Setor', value: 'siap_setor' },
   { label: 'Setor Tgl', value: 'setor_tgl' },
   { label: 'Sudah Setor', value: 'sudah_setor' },
@@ -309,7 +319,8 @@ const filterTabs = [
   { label: 'Live Verified', value: 'live' }
 ];
 
-const siapSetorCount = computed(() => props.ledger.filter(l => l.setorStatus === 'siap_setor' || l.setorStatus === 'belum_disetor' || !l.setorStatus).length);
+const newCount = computed(() => props.ledger.filter(l => l.setorStatus === 'new' || !l.setorStatus).length);
+const siapSetorCount = computed(() => props.ledger.filter(l => l.setorStatus === 'siap_setor').length);
 const setorTglCount = computed(() => props.ledger.filter(l => l.setorStatus === 'setor_tgl').length);
 const sudahSetorCount = computed(() => props.ledger.filter(l => l.setorStatus === 'sudah_setor' || l.setorStatus === 'disetor').length);
 const akunOrtuCount = computed(() => props.ledger.filter(l => l.setorStatus === 'akun_ortu').length);
@@ -317,8 +328,10 @@ const liveInLedgerCount = computed(() => props.ledger.filter(l => l.verifyStatus
 
 const filteredLedger = computed(() => {
   let list = props.ledger;
-  if (activeFilter.value === 'siap_setor') {
-    list = list.filter(l => l.setorStatus === 'siap_setor' || l.setorStatus === 'belum_disetor' || !l.setorStatus);
+  if (activeFilter.value === 'new') {
+    list = list.filter(l => l.setorStatus === 'new' || !l.setorStatus);
+  } else if (activeFilter.value === 'siap_setor') {
+    list = list.filter(l => l.setorStatus === 'siap_setor');
   } else if (activeFilter.value === 'setor_tgl') {
     list = list.filter(l => l.setorStatus === 'setor_tgl');
   } else if (activeFilter.value === 'sudah_setor') {
@@ -389,7 +402,7 @@ function handleRowStatusChange(row, newStatus) {
     targetDate = targetDate || formatDateDisplay(new Date().toISOString().slice(0, 10));
   } else if (newStatus === 'sudah_setor') {
     targetDate = nowFormatted;
-  } else if (newStatus === 'siap_setor' || newStatus === 'akun_ortu') {
+  } else if (newStatus === 'new' || newStatus === 'siap_setor' || newStatus === 'akun_ortu') {
     targetDate = null;
   }
 
@@ -452,6 +465,7 @@ function formatInputDate(dateDisplayStr) {
 
 function getFilterCount(val) {
   if (val === 'all') return props.ledger.length;
+  if (val === 'new') return newCount.value;
   if (val === 'siap_setor') return siapSetorCount.value;
   if (val === 'setor_tgl') return setorTglCount.value;
   if (val === 'sudah_setor') return sudahSetorCount.value;
@@ -460,10 +474,15 @@ function getFilterCount(val) {
   return 0;
 }
 
+function getCleanStatusKey(status) {
+  if (!status || status === 'new') return 'new';
+  if (status === 'belum_disetor') return 'new'; // default legacy empty to new
+  return status;
+}
+
 function getKeteranganBadgeClass(status) {
   switch (status) {
     case 'siap_setor':
-    case 'belum_disetor':
       return 'bg-blue-50 text-blue-700 border-blue-200';
     case 'setor_tgl':
       return 'bg-indigo-50 text-indigo-700 border-indigo-200';
@@ -472,18 +491,20 @@ function getKeteranganBadgeClass(status) {
       return 'bg-emerald-50 text-emerald-700 border-emerald-200';
     case 'akun_ortu':
       return 'bg-purple-50 text-purple-700 border-purple-200';
+    case 'new':
+    case 'belum_disetor':
     default:
-      return 'bg-slate-50 text-slate-700 border-slate-200';
+      return 'bg-slate-100 text-slate-700 border-slate-300';
   }
 }
 
 function getKeteranganLabel(statusKey) {
   switch (statusKey) {
-    case 'siap_setor': case 'belum_disetor': return 'Siap Setor';
+    case 'siap_setor': return 'Siap Setor';
     case 'setor_tgl': return 'Setor Tgl';
     case 'sudah_setor': case 'disetor': return 'Sudah Setor';
     case 'akun_ortu': return 'Akun Ortu';
-    default: return 'Siap Setor';
+    case 'new': case 'belum_disetor': default: return 'NEW';
   }
 }
 

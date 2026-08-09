@@ -580,7 +580,7 @@ function getFormattedDate() {
 }
 
 // Ledger Operations
-function addLedgerEmails(rawText, defaultSetor = 'siap_setor', customDate = null) {
+function addLedgerEmails(rawText, defaultSetor = 'new', customDate = null) {
   const list = extractEmails(rawText);
   let addedCount = 0;
   const nowStr = getFormattedDate();
