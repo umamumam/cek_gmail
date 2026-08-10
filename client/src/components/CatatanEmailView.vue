@@ -238,7 +238,7 @@
           </div>
         </div>
 
-        <!-- Row 2: Batch Actions Controls -->
+        <!-- Row 2: Batch Actions Controls & Export -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-slate-200/80">
           <div class="flex items-center gap-2 flex-wrap">
             <!-- Bulk Keterangan Selector -->
@@ -259,37 +259,54 @@
               <option value="akun_ortu">👨‍👩‍👧 Set Akun Ortu</option>
             </select>
 
-            <!-- Bulk Password Modifier -->
+            <!-- Bulk Password Modifier Icon Button -->
             <button
               @click="handleBatchPassword"
               :disabled="selectedEmails.length === 0"
-              class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition cursor-pointer disabled:opacity-40 flex items-center gap-1 shadow-2xs">
-              <span>🔑 Ubah Password ({{ selectedEmails.length }})</span>
+              title="Ubah Password Terpilih"
+              class="p-2 rounded-xl text-xs font-bold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition cursor-pointer disabled:opacity-40 flex items-center justify-center shadow-2xs">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.778-7.778zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
             </button>
 
-            <!-- Bulk Verification Button -->
+            <!-- Bulk Verification Icon Button -->
             <button
               @click="$emit('checkSelectedLedger', selectedEmails)"
               :disabled="selectedEmails.length === 0"
-              class="px-3.5 py-1.5 rounded-xl text-xs font-bold btn-primary cursor-pointer disabled:opacity-40 shadow-2xs">
-              <span>Cek Terpilih ({{ selectedEmails.length }})</span>
+              title="Cek Live Terpilih"
+              class="p-2 rounded-xl text-xs font-bold btn-primary cursor-pointer disabled:opacity-40 shadow-2xs flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             </button>
           </div>
 
           <div class="flex items-center gap-2">
-            <!-- Export Excel -->
+            <!-- Switch Radio Toggle: Live Only (Left of Export Button) -->
+            <label class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-xl cursor-pointer hover:bg-slate-50 transition shadow-2xs select-none" title="Filter hanya email status Live">
+              <input
+                type="checkbox"
+                v-model="onlyLiveFilter"
+                class="sr-only peer" />
+              <div class="w-7 h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500 relative"></div>
+              <span class="text-xs font-bold text-slate-700 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                <span>Live Only ({{ liveInLedgerCount }})</span>
+              </span>
+            </label>
+
+            <!-- Export Excel Icon Button -->
             <button
               @click="exportLedgerExcel"
-              class="px-3.5 py-1.5 rounded-xl text-xs btn-secondary cursor-pointer flex items-center gap-1">
-              <span>Ekspor .xlsx</span>
+              title="Ekspor ke Excel (.xlsx)"
+              class="p-2 rounded-xl text-xs btn-secondary cursor-pointer flex items-center justify-center shadow-2xs">
+              <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
             </button>
 
-            <!-- Clear Ledger -->
+            <!-- Clear Ledger Icon Button -->
             <button
               @click="$emit('clearLedger')"
               :disabled="ledger.length === 0"
-              class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-white text-rose-600 border border-slate-200 hover:bg-rose-50 transition cursor-pointer disabled:opacity-40">
-              Kosongkan
+              title="Kosongkan Catatan Email"
+              class="p-2 rounded-xl text-xs font-semibold bg-white text-rose-600 border border-slate-200 hover:bg-rose-50 transition cursor-pointer disabled:opacity-40 flex items-center justify-center shadow-2xs">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
             </button>
           </div>
         </div>
@@ -458,14 +475,15 @@
               <td class="py-3.5 px-4 text-right space-x-1.5">
                 <button
                   @click="$emit('verifySingleInLedger', row.email)"
-                  class="px-2.5 py-1 rounded-lg text-xs btn-primary cursor-pointer">
-                  Cek Live
+                  title="Cek Live Check Sekarang"
+                  class="p-1.5 rounded-lg text-xs btn-primary cursor-pointer inline-flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 </button>
-
                 <button
                   @click="deleteFromLedger(row.email)"
-                  class="px-2 py-1 rounded-lg text-xs font-semibold bg-white border border-slate-200 text-rose-600 hover:bg-rose-50 transition cursor-pointer">
-                  Hapus
+                  title="Hapus dari Catatan"
+                  class="p-1.5 rounded-lg text-xs bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200 transition cursor-pointer inline-flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                 </button>
               </td>
             </tr>
@@ -560,6 +578,7 @@ const searchQuery = ref("");
 const selectedEmails = ref([]);
 const showAllPasswords = ref(false);
 const visiblePassMap = ref({});
+const onlyLiveFilter = ref(false);
 
 const filterTabs = [
   { label: "NEW", value: "new" },
@@ -568,7 +587,6 @@ const filterTabs = [
   { label: "Setor Tgl", value: "setor_tgl" },
   { label: "Sudah Setor", value: "sudah_setor" },
   { label: "Akun Ortu", value: "akun_ortu" },
-  { label: "Live Verified", value: "live" },
 ];
 
 const newCount = computed(
@@ -618,7 +636,9 @@ const filteredLedger = computed(() => {
     );
   } else if (activeFilter.value === "akun_ortu") {
     list = list.filter((l) => l.setorStatus === "akun_ortu");
-  } else if (activeFilter.value === "live") {
+  }
+
+  if (onlyLiveFilter.value) {
     list = list.filter((l) => l.verifyStatus === "live");
   }
 

@@ -92,57 +92,72 @@
 
     <!-- Main Table Container -->
     <div class="saas-card overflow-hidden">
-      <!-- Filter & Actions Bar -->
-      <div class="p-4 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50/60">
-        
-        <!-- Filter Tabs -->
-        <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 overflow-x-auto">
-          <button
-            v-for="tab in filterTabs"
-            :key="tab.value"
-            @click="activeFilter = tab.value"
-            class="px-3 py-1 rounded-lg text-xs font-semibold transition cursor-pointer whitespace-nowrap"
-            :class="activeFilter === tab.value ? 'bg-blue-600 text-white font-bold' : 'text-slate-600 hover:text-slate-900'">
-            {{ tab.label }} ({{ getCount(tab.value) }})
-          </button>
-        </div>
+      <!-- Table Filters & Batch Controls (2-Row Layout) -->
+      <div class="p-4 border-b border-slate-200 bg-slate-50/70 space-y-3">
+        <!-- Row 1: Filter Tabs + Live Search -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <!-- Filter Tabs -->
+          <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 overflow-x-auto shadow-2xs">
+            <button
+              v-for="tab in filterTabs"
+              :key="tab.value"
+              @click="activeFilter = tab.value"
+              class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer whitespace-nowrap"
+              :class="activeFilter === tab.value ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900'">
+              {{ tab.label }} ({{ getCount(tab.value) }})
+            </button>
+          </div>
 
-        <!-- Search & Actions -->
-        <div class="flex items-center gap-2 flex-wrap">
-          <div class="relative flex-1 sm:w-48">
+          <!-- Live Search Bar -->
+          <div class="relative sm:w-56">
             <input
               v-model="searchQuery"
               type="text"
               placeholder="Cari riwayat email..."
-              class="w-full bg-white border border-slate-200 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition" />
+              class="w-full bg-white border border-slate-300 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition shadow-2xs" />
             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           </div>
+        </div>
 
-          <button
-            @click="$emit('copyLiveHistory')"
-            class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition cursor-pointer">
-            Salin Live
-          </button>
+        <!-- Row 2: Batch Action Icon Buttons -->
+        <div class="flex items-center justify-between gap-2 flex-wrap pt-3 border-t border-slate-200/80">
+          <div class="flex items-center gap-2">
+            <!-- Copy Live Icon Button -->
+            <button
+              @click="$emit('copyLiveHistory')"
+              title="Salin Email Live Ke Clipboard"
+              class="p-2 rounded-xl text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition cursor-pointer shadow-2xs flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
 
-          <button
-            @click="$emit('exportHistoryCsv')"
-            class="px-3 py-1.5 rounded-xl text-xs font-bold bg-blue-600 text-white hover:bg-blue-700 shadow-xs transition cursor-pointer">
-            Ekspor CSV
-          </button>
+            <!-- Export CSV Icon Button -->
+            <button
+              @click="$emit('exportHistoryCsv')"
+              title="Ekspor Riwayat ke CSV"
+              class="p-2 rounded-xl text-xs font-bold bg-blue-600 text-white hover:bg-blue-700 transition cursor-pointer shadow-2xs flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+            </button>
+          </div>
 
-          <button
-            @click="handleBatchDelete"
-            :disabled="selectedEmails.length === 0"
-            class="px-3 py-1.5 rounded-xl text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200 hover:bg-rose-100 transition cursor-pointer disabled:opacity-40">
-            🗑️ Hapus Terpilih ({{ selectedEmails.length }})
-          </button>
+          <div class="flex items-center gap-2">
+            <!-- Delete Selected Icon Button -->
+            <button
+              @click="handleBatchDelete"
+              :disabled="selectedEmails.length === 0"
+              :title="selectedEmails.length > 0 ? `Hapus ${selectedEmails.length} Email Terpilih` : 'Hapus Terpilih'"
+              class="p-2 rounded-xl text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200 hover:bg-rose-100 transition cursor-pointer disabled:opacity-40 shadow-2xs flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-rose-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
 
-          <button
-            @click="$emit('clearHistory')"
-            :disabled="history.length === 0"
-            class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white text-rose-600 border border-slate-200 hover:bg-rose-50 transition cursor-pointer disabled:opacity-40">
-            Kosongkan Semua
-          </button>
+            <!-- Clear All History Icon Button -->
+            <button
+              @click="$emit('clearHistory')"
+              :disabled="history.length === 0"
+              title="Kosongkan Seluruh Riwayat"
+              class="p-2 rounded-xl text-xs font-semibold bg-white text-rose-600 border border-slate-200 hover:bg-rose-50 transition cursor-pointer disabled:opacity-40 shadow-2xs flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-rose-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -197,21 +212,24 @@
               <td class="py-3 px-4 font-mono text-slate-600">
                 {{ row.checkedAt || '-' }}
               </td>
-              <td class="py-3 px-4 text-right space-x-2">
+              <td class="py-3 px-4 text-right space-x-1.5">
                 <button
                   @click="$emit('openDetail', row)"
-                  class="text-blue-600 hover:text-blue-800 font-semibold cursor-pointer">
-                  Detail
+                  title="Lihat Detail"
+                  class="p-1.5 rounded-lg text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer inline-flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                 </button>
                 <button
                   @click="$emit('addToLedger', row)"
-                  class="text-purple-600 hover:text-purple-800 font-semibold cursor-pointer">
-                  + Ledger
+                  title="Tambahkan Ke Ledger Catatan Email"
+                  class="p-1.5 rounded-lg text-xs bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-200 transition cursor-pointer inline-flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 </button>
                 <button
                   @click="handleDeleteSingle(row.email)"
-                  class="text-rose-500 hover:text-rose-700 font-semibold cursor-pointer">
-                  Hapus
+                  title="Hapus dari Riwayat"
+                  class="p-1.5 rounded-lg text-xs bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200 transition cursor-pointer inline-flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                 </button>
               </td>
             </tr>
