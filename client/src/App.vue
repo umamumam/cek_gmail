@@ -96,7 +96,8 @@
             @addToLedger="addToLedgerSingle"
             @copyLiveHistory="copyLiveHistory"
             @exportHistoryCsv="exportHistoryCsv"
-            @clearHistory="clearHistory" />
+            @clearHistory="clearHistory"
+            @deleteSelectedHistory="deleteSelectedHistory" />
 
           <!-- Tab 3: Riwayat Perubahan -->
           <PerubahanView
@@ -779,6 +780,15 @@ function clearHistory() {
     checkHistory.value = [];
     saveState();
     showToast('Riwayat pengecekan dihapus.');
+  }
+}
+
+function deleteSelectedHistory(emailsArray) {
+  if (!emailsArray || emailsArray.length === 0) return;
+  if (confirm(`Apakah Anda yakin ingin menghapus ${emailsArray.length} riwayat email terpilih?`)) {
+    checkHistory.value = checkHistory.value.filter(h => !emailsArray.includes(h.email));
+    saveState();
+    showToast(`${emailsArray.length} riwayat email berhasil dihapus.`);
   }
 }
 

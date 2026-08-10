@@ -131,10 +131,17 @@
           </button>
 
           <button
+            @click="handleBatchDelete"
+            :disabled="selectedEmails.length === 0"
+            class="px-3 py-1.5 rounded-xl text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200 hover:bg-rose-100 transition cursor-pointer disabled:opacity-40">
+            🗑️ Hapus Terpilih ({{ selectedEmails.length }})
+          </button>
+
+          <button
             @click="$emit('clearHistory')"
             :disabled="history.length === 0"
             class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white text-rose-600 border border-slate-200 hover:bg-rose-50 transition cursor-pointer disabled:opacity-40">
-            Hapus Riwayat
+            Kosongkan Semua
           </button>
         </div>
       </div>
@@ -144,6 +151,13 @@
         <table class="w-full text-left text-xs">
           <thead class="bg-slate-50 text-slate-500 font-mono uppercase tracking-wider border-b border-slate-200">
             <tr>
+              <th class="py-3 px-4 w-10">
+                <input
+                  type="checkbox"
+                  :checked="isAllSelected"
+                  @change="toggleSelectAll"
+                  class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer" />
+              </th>
               <th class="py-3 px-4 w-12">#</th>
               <th class="py-3 px-4">Email Address</th>
               <th class="py-3 px-4">Status Hasil</th>
@@ -156,7 +170,17 @@
             <tr
               v-for="(row, idx) in filteredHistory"
               :key="row.id || idx"
-              class="hover:bg-slate-50/80 transition">
+              class="hover:bg-slate-50/80 transition"
+              :class="selectedEmails.includes(row.email) ? 'bg-blue-50/40' : ''">
+              <!-- Checkbox Column -->
+              <td class="py-3 px-4">
+                <input
+                  type="checkbox"
+                  :value="row.email"
+                  v-model="selectedEmails"
+                  class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer" />
+              </td>
+
               <td class="py-3 px-4 font-mono text-slate-400">{{ idx + 1 }}</td>
               <td class="py-3 px-4">
                 <div class="font-semibold text-slate-900 font-mono">{{ row.email }}</div>
@@ -183,6 +207,11 @@
                   @click="$emit('addToLedger', row)"
                   class="text-purple-600 hover:text-purple-800 font-semibold cursor-pointer">
                   + Ledger
+                </button>
+                <button
+                  @click="handleDeleteSingle(row.email)"
+                  class="text-rose-500 hover:text-rose-700 font-semibold cursor-pointer">
+                  Hapus
                 </button>
               </td>
             </tr>
@@ -212,10 +241,11 @@ const props = defineProps({
   history: { type: Array, default: () => [] }
 });
 
-defineEmits(['openDetail', 'addToLedger', 'copyLiveHistory', 'exportHistoryCsv', 'clearHistory']);
+const emit = defineEmits(['openDetail', 'addToLedger', 'copyLiveHistory', 'exportHistoryCsv', 'clearHistory', 'deleteSelectedHistory']);
 
 const activeFilter = ref('all');
 const searchQuery = ref('');
+const selectedEmails = ref([]);
 
 const filterTabs = [
   { label: 'Semua Riwayat', value: 'all' },
@@ -240,6 +270,30 @@ const filteredHistory = computed(() => {
   }
   return list;
 });
+
+const isAllSelected = computed(() => {
+  if (filteredHistory.value.length === 0) return false;
+  return filteredHistory.value.every(row => selectedEmails.value.includes(row.email));
+});
+
+function toggleSelectAll() {
+  if (isAllSelected.value) {
+    selectedEmails.value = [];
+  } else {
+    selectedEmails.value = filteredHistory.value.map(row => row.email);
+  }
+}
+
+function handleBatchDelete() {
+  if (selectedEmails.value.length === 0) return;
+  emit('deleteSelectedHistory', [...selectedEmails.value]);
+  selectedEmails.value = [];
+}
+
+function handleDeleteSingle(email) {
+  emit('deleteSelectedHistory', [email]);
+  selectedEmails.value = selectedEmails.value.filter(e => e !== email);
+}
 
 function getCount(val) {
   if (val === 'all') return props.history.length;
