@@ -330,7 +330,7 @@
                     type="button"
                     title="Intip / Sembunyikan Semua Password"
                     class="text-xs text-slate-400 hover:text-blue-600 cursor-pointer ml-1">
-                    {{ showAllPasswords ? '👁️' : '🙈' }}
+                    <i :class="showAllPasswords ? 'fa-solid fa-eye-slash text-blue-600' : 'fa-solid fa-eye'"></i>
                   </button>
                 </div>
               </th>
@@ -375,14 +375,14 @@
                     type="button"
                     class="text-slate-400 hover:text-blue-600 text-xs p-0.5 cursor-pointer flex-shrink-0"
                     title="Intip Password">
-                    {{ isPasswordVisible(row.email) ? '👁️' : '🙈' }}
+                    <i :class="isPasswordVisible(row.email) ? 'fa-solid fa-eye-slash text-blue-600' : 'fa-solid fa-eye'"></i>
                   </button>
                   <button
                     @click="copyPasswordText(row.password)"
                     type="button"
                     class="text-slate-400 hover:text-emerald-600 text-xs p-0.5 cursor-pointer flex-shrink-0"
                     title="Salin Password">
-                    📋
+                    <i class="fa-solid fa-copy"></i>
                   </button>
                 </div>
                 <button
@@ -468,18 +468,18 @@
               </td>
 
               <!-- Action Row: Cek Live + Delete -->
-              <td class="py-3.5 px-4 text-right space-x-1.5">
+              <td class="py-3.5 px-4 text-right space-x-1.5 whitespace-nowrap">
                 <button
                   @click="$emit('verifySingleInLedger', row.email)"
                   title="Cek Live Check Sekarang"
-                  class="p-1.5 rounded-lg text-xs btn-primary cursor-pointer inline-flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  class="w-8 h-8 rounded-lg text-xs btn-primary cursor-pointer inline-flex items-center justify-center shadow-2xs">
+                  <i class="fa-solid fa-rotate-right"></i>
                 </button>
                 <button
                   @click="deleteFromLedger(row.email)"
                   title="Hapus dari Catatan"
-                  class="p-1.5 rounded-lg text-xs bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200 transition cursor-pointer inline-flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  class="w-8 h-8 rounded-lg text-xs bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200 transition cursor-pointer inline-flex items-center justify-center shadow-2xs">
+                  <i class="fa-solid fa-trash-can"></i>
                 </button>
               </td>
             </tr>

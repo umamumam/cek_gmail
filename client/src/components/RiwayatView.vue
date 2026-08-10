@@ -204,24 +204,24 @@
               <td class="py-3 px-4 font-mono text-slate-600">
                 {{ row.checkedAt || '-' }}
               </td>
-              <td class="py-3 px-4 text-right space-x-1.5">
+              <td class="py-3 px-4 text-right space-x-1.5 whitespace-nowrap">
                 <button
                   @click="$emit('openDetail', row)"
                   title="Lihat Detail"
-                  class="p-1.5 rounded-lg text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer inline-flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  class="w-8 h-8 rounded-lg text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer inline-flex items-center justify-center shadow-2xs">
+                  <i class="fa-solid fa-eye"></i>
                 </button>
                 <button
                   @click="$emit('addToLedger', row)"
                   title="Tambahkan Ke Ledger Catatan Email"
-                  class="p-1.5 rounded-lg text-xs bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-200 transition cursor-pointer inline-flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  class="w-8 h-8 rounded-lg text-xs bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-200 transition cursor-pointer inline-flex items-center justify-center shadow-2xs">
+                  <i class="fa-solid fa-folder-plus"></i>
                 </button>
                 <button
                   @click="handleDeleteSingle(row.email)"
                   title="Hapus dari Riwayat"
-                  class="p-1.5 rounded-lg text-xs bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200 transition cursor-pointer inline-flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  class="w-8 h-8 rounded-lg text-xs bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200 transition cursor-pointer inline-flex items-center justify-center shadow-2xs">
+                  <i class="fa-solid fa-trash-can"></i>
                 </button>
               </td>
             </tr>
