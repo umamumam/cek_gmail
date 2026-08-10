@@ -119,43 +119,35 @@
           </div>
         </div>
 
-        <!-- Row 2: Batch Action Icon Buttons -->
+        <!-- Row 2: Batch Action Buttons -->
         <div class="flex items-center justify-between gap-2 flex-wrap pt-3 border-t border-slate-200/80">
           <div class="flex items-center gap-2">
-            <!-- Copy Live Icon Button -->
             <button
               @click="$emit('copyLiveHistory')"
-              title="Salin Email Live Ke Clipboard"
-              class="p-2 rounded-xl text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition cursor-pointer shadow-2xs flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition cursor-pointer">
+              Salin Live
             </button>
 
-            <!-- Export CSV Icon Button -->
             <button
               @click="$emit('exportHistoryCsv')"
-              title="Ekspor Riwayat ke CSV"
-              class="p-2 rounded-xl text-xs font-bold bg-blue-600 text-white hover:bg-blue-700 transition cursor-pointer shadow-2xs flex items-center justify-center">
-              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+              class="px-3 py-1.5 rounded-xl text-xs font-bold bg-blue-600 text-white hover:bg-blue-700 shadow-xs transition cursor-pointer">
+              Ekspor CSV
             </button>
           </div>
 
           <div class="flex items-center gap-2">
-            <!-- Delete Selected Icon Button -->
             <button
               @click="handleBatchDelete"
               :disabled="selectedEmails.length === 0"
-              :title="selectedEmails.length > 0 ? `Hapus ${selectedEmails.length} Email Terpilih` : 'Hapus Terpilih'"
-              class="p-2 rounded-xl text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200 hover:bg-rose-100 transition cursor-pointer disabled:opacity-40 shadow-2xs flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-rose-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              class="px-3 py-1.5 rounded-xl text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200 hover:bg-rose-100 transition cursor-pointer disabled:opacity-40">
+              🗑️ Hapus Terpilih ({{ selectedEmails.length }})
             </button>
 
-            <!-- Clear All History Icon Button -->
             <button
               @click="$emit('clearHistory')"
               :disabled="history.length === 0"
-              title="Kosongkan Seluruh Riwayat"
-              class="p-2 rounded-xl text-xs font-semibold bg-white text-rose-600 border border-slate-200 hover:bg-rose-50 transition cursor-pointer disabled:opacity-40 shadow-2xs flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-rose-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+              class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white text-rose-600 border border-slate-200 hover:bg-rose-50 transition cursor-pointer disabled:opacity-40">
+              Kosongkan Semua
             </button>
           </div>
         </div>
