@@ -135,36 +135,7 @@
     </div>
 
     <!-- Input Add Email to Ledger Section -->
-    <div class="saas-card p-6 space-y-4">
-      <div
-        class="flex items-center justify-between border-b border-slate-200 pb-3">
-        <div>
-          <h3
-            class="text-base font-bold text-slate-900 flex items-center gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-5 h-5 text-blue-600"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2">
-              <path
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-            </svg>
-            Tambah Catatan Email Baru & Keterangan
-          </h3>
-          <p class="text-xs text-slate-500">
-            Masukkan daftar email (pisahkan per baris). Pilih status keterangan
-            default di sebelah kanan.
-          </p>
-        </div>
-
-        <span
-          class="px-3 py-1 bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold rounded-lg">
-          Unique Key Engine
-        </span>
-      </div>
-
+    <div class="saas-card p-5">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div class="md:col-span-3">
           <textarea
