@@ -598,12 +598,7 @@
                       : 'bg-white text-slate-400 border-slate-300 hover:border-emerald-400 hover:text-emerald-600 hover:bg-emerald-50/50'
                   "
                   class="w-8 h-8 rounded-lg text-xs font-black border transition cursor-pointer inline-flex items-center justify-center shadow-2xs">
-                  <span
-                    v-if="row.isVerif"
-                    class="flex items-center gap-0.5 text-xs font-black">
-                    <i class="fa-solid fa-check text-[10px]"></i>V
-                  </span>
-                  <span v-else class="text-xs font-bold font-mono">V</span>
+                  <span class="text-xs font-bold font-mono">V</span>
                 </button>
 
                 <!-- Checklist Banding (B) -->
@@ -617,12 +612,7 @@
                       : 'bg-white text-slate-400 border-slate-300 hover:border-amber-400 hover:text-amber-600 hover:bg-amber-50/50'
                   "
                   class="w-8 h-8 rounded-lg text-xs font-black border transition cursor-pointer inline-flex items-center justify-center shadow-2xs">
-                  <span
-                    v-if="row.isBanding"
-                    class="flex items-center gap-0.5 text-xs font-black">
-                    <i class="fa-solid fa-check text-[10px]"></i>B
-                  </span>
-                  <span v-else class="text-xs font-bold font-mono">B</span>
+                  <span class="text-xs font-bold font-mono">B</span>
                 </button>
 
                 <!-- Cek Live Single -->
