@@ -3,75 +3,133 @@
     <!-- Top Ledger Stats Summary -->
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
       <!-- 1. Total Ledger Card -->
-      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 p-4 text-white shadow-md shadow-slate-950/20 hover:shadow-lg transition-all duration-200 group">
-        <div class="absolute -right-4 -bottom-4 w-16 h-16 bg-blue-500/20 rounded-full blur-xl group-hover:bg-blue-500/30 transition"></div>
+      <div
+        class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 p-4 text-white shadow-md shadow-slate-950/20 hover:shadow-lg transition-all duration-200 group">
+        <div
+          class="absolute -right-4 -bottom-4 w-16 h-16 bg-blue-500/20 rounded-full blur-xl group-hover:bg-blue-500/30 transition"></div>
         <div class="flex items-center justify-between relative z-10">
-          <span class="text-[10px] font-extrabold text-blue-200 uppercase tracking-wider block">Total Ledger</span>
-          <span class="w-6 h-6 rounded-lg bg-white/10 backdrop-blur-md text-blue-300 flex items-center justify-center text-[10px] font-bold">#</span>
+          <span
+            class="text-[10px] font-extrabold text-blue-200 uppercase tracking-wider block"
+            >Total Ledger</span
+          >
+          <span
+            class="w-6 h-6 rounded-lg bg-white/10 backdrop-blur-md text-blue-300 flex items-center justify-center text-[10px] font-bold"
+            >#</span
+          >
         </div>
         <div class="mt-2 relative z-10">
-          <span class="text-xl font-black font-mono tracking-tight text-white block">{{ ledger.length }}</span>
-          <span class="text-[9px] text-blue-200/80 font-medium mt-1 block">Database Email Unik</span>
+          <span
+            class="text-xl font-black font-mono tracking-tight text-white block"
+            >{{ ledger.length }}</span
+          >
+          <span class="text-[9px] text-blue-200/80 font-medium mt-1 block"
+            >Database Email Unik</span
+          >
         </div>
       </div>
 
       <!-- 2. NEW Card -->
-      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-500/10 via-white to-slate-500/5 p-4 border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-200 group">
+      <div
+        class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-500/10 via-white to-slate-500/5 p-4 border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-200 group">
         <div class="flex items-center justify-between relative z-10">
-          <span class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block">NEW (Kosong)</span>
+          <span
+            class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block"
+            >NEW (Kosong)</span
+          >
           <span class="w-2 h-2 rounded-full bg-slate-400"></span>
         </div>
         <div class="mt-2 relative z-10">
-          <span class="text-xl font-black text-slate-900 font-mono tracking-tight block">{{ newCount }}</span>
-          <span class="text-[9px] text-slate-500 font-semibold mt-1 block">Belum Di-Set Status</span>
+          <span
+            class="text-xl font-black text-slate-900 font-mono tracking-tight block"
+            >{{ newCount }}</span
+          >
+          <span class="text-[9px] text-slate-500 font-semibold mt-1 block"
+            >Belum Di-Set Status</span
+          >
         </div>
       </div>
 
       <!-- 3. Siap Setor Card -->
-      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500/10 via-white to-blue-500/5 p-4 border border-blue-200/80 shadow-xs hover:shadow-md transition-all duration-200 group">
+      <div
+        class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500/10 via-white to-blue-500/5 p-4 border border-blue-200/80 shadow-xs hover:shadow-md transition-all duration-200 group">
         <div class="flex items-center justify-between relative z-10">
-          <span class="text-[10px] font-extrabold text-blue-800 uppercase tracking-wider block">Siap Setor</span>
+          <span
+            class="text-[10px] font-extrabold text-blue-800 uppercase tracking-wider block"
+            >Siap Setor</span
+          >
           <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
         </div>
         <div class="mt-2 relative z-10">
-          <span class="text-xl font-black text-slate-900 font-mono tracking-tight block">{{ siapSetorCount }}</span>
-          <span class="text-[9px] text-blue-700 font-semibold mt-1 block">Siap Diproses</span>
+          <span
+            class="text-xl font-black text-slate-900 font-mono tracking-tight block"
+            >{{ siapSetorCount }}</span
+          >
+          <span class="text-[9px] text-blue-700 font-semibold mt-1 block"
+            >Siap Diproses</span
+          >
         </div>
       </div>
 
       <!-- 4. Setor Tgl Card -->
-      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-500/10 via-white to-indigo-500/5 p-4 border border-indigo-200/80 shadow-xs hover:shadow-md transition-all duration-200 group">
+      <div
+        class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-500/10 via-white to-indigo-500/5 p-4 border border-indigo-200/80 shadow-xs hover:shadow-md transition-all duration-200 group">
         <div class="flex items-center justify-between relative z-10">
-          <span class="text-[10px] font-extrabold text-indigo-800 uppercase tracking-wider block">Setor Tgl...</span>
+          <span
+            class="text-[10px] font-extrabold text-indigo-800 uppercase tracking-wider block"
+            >Setor Tgl...</span
+          >
           <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
         </div>
         <div class="mt-2 relative z-10">
-          <span class="text-xl font-black text-slate-900 font-mono tracking-tight block">{{ setorTglCount }}</span>
-          <span class="text-[9px] text-indigo-700 font-semibold mt-1 block">Jadwal Tanggal</span>
+          <span
+            class="text-xl font-black text-slate-900 font-mono tracking-tight block"
+            >{{ setorTglCount }}</span
+          >
+          <span class="text-[9px] text-indigo-700 font-semibold mt-1 block"
+            >Jadwal Tanggal</span
+          >
         </div>
       </div>
 
       <!-- 5. Sudah Setor Card -->
-      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500/10 via-white to-emerald-500/5 p-4 border border-emerald-200/80 shadow-xs hover:shadow-md transition-all duration-200 group">
+      <div
+        class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500/10 via-white to-emerald-500/5 p-4 border border-emerald-200/80 shadow-xs hover:shadow-md transition-all duration-200 group">
         <div class="flex items-center justify-between relative z-10">
-          <span class="text-[10px] font-extrabold text-emerald-800 uppercase tracking-wider block">Sudah Setor</span>
+          <span
+            class="text-[10px] font-extrabold text-emerald-800 uppercase tracking-wider block"
+            >Sudah Setor</span
+          >
           <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
         </div>
         <div class="mt-2 relative z-10">
-          <span class="text-xl font-black text-slate-900 font-mono tracking-tight block">{{ sudahSetorCount }}</span>
-          <span class="text-[9px] text-emerald-700 font-semibold mt-1 block">Telah Disetorkan</span>
+          <span
+            class="text-xl font-black text-slate-900 font-mono tracking-tight block"
+            >{{ sudahSetorCount }}</span
+          >
+          <span class="text-[9px] text-emerald-700 font-semibold mt-1 block"
+            >Telah Disetorkan</span
+          >
         </div>
       </div>
 
       <!-- 6. Akun Ortu Card -->
-      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500/10 via-white to-purple-500/5 p-4 border border-purple-200/80 shadow-xs hover:shadow-md transition-all duration-200 group">
+      <div
+        class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500/10 via-white to-purple-500/5 p-4 border border-purple-200/80 shadow-xs hover:shadow-md transition-all duration-200 group">
         <div class="flex items-center justify-between relative z-10">
-          <span class="text-[10px] font-extrabold text-purple-800 uppercase tracking-wider block">Akun Ortu</span>
+          <span
+            class="text-[10px] font-extrabold text-purple-800 uppercase tracking-wider block"
+            >Akun Ortu</span
+          >
           <span class="w-2 h-2 rounded-full bg-purple-500"></span>
         </div>
         <div class="mt-2 relative z-10">
-          <span class="text-xl font-black text-slate-900 font-mono tracking-tight block">{{ akunOrtuCount }}</span>
-          <span class="text-[9px] text-purple-700 font-semibold mt-1 block">Kategori Akun Ortu</span>
+          <span
+            class="text-xl font-black text-slate-900 font-mono tracking-tight block"
+            >{{ akunOrtuCount }}</span
+          >
+          <span class="text-[9px] text-purple-700 font-semibold mt-1 block"
+            >Kategori Akun Ortu</span
+          >
         </div>
       </div>
     </div>
@@ -184,9 +242,11 @@
       <!-- Table Filters & Batch Controls (2-Row DataTables Layout) -->
       <div class="p-4 border-b border-slate-200 bg-slate-50/70 space-y-3">
         <!-- Row 1: Filter Tabs + DataTables Length & Live Search -->
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div
+          class="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <!-- 4 Filter Tabs -->
-          <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 overflow-x-auto shadow-2xs">
+          <div
+            class="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 overflow-x-auto shadow-2xs">
             <button
               v-for="tab in filterTabs"
               :key="tab.value"
@@ -204,7 +264,8 @@
           <!-- Right: DataTables Length Select & Live Search -->
           <div class="flex items-center gap-3 flex-wrap">
             <!-- DataTables Page Size Select -->
-            <div class="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+            <div
+              class="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
               <span>Tampilkan:</span>
               <select
                 v-model.number="pageSize"
@@ -239,7 +300,8 @@
         </div>
 
         <!-- Row 2: Batch Actions Controls & Export -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-slate-200/80">
+        <div
+          class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-slate-200/80">
           <div class="flex items-center gap-2 flex-wrap">
             <!-- Bulk Keterangan Selector -->
             <select
@@ -281,7 +343,7 @@
               :disabled="selectedEmails.length === 0"
               class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition cursor-pointer disabled:opacity-40 flex items-center gap-1 shadow-2xs"
               title="Tandai Verif (V) untuk email terpilih">
-              <span class="text-emerald-600 font-black">✓V</span>
+              <span class="text-emerald-600 font-black">V</span>
               <span>({{ selectedEmails.length }})</span>
             </button>
             <button
@@ -289,35 +351,43 @@
               :disabled="selectedEmails.length === 0"
               class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition cursor-pointer disabled:opacity-40 flex items-center gap-1 shadow-2xs"
               title="Tandai Banding (B) untuk email terpilih">
-              <span class="text-amber-600 font-black">✓B</span>
+              <span class="text-amber-600 font-black">B</span>
               <span>({{ selectedEmails.length }})</span>
             </button>
           </div>
 
           <div class="flex items-center gap-2 flex-wrap">
             <!-- Switch Radio Toggle: Live Only -->
-            <label class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-xl cursor-pointer hover:bg-slate-50 transition shadow-2xs select-none" title="Filter hanya email status Live">
+            <label
+              class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-xl cursor-pointer hover:bg-slate-50 transition shadow-2xs select-none"
+              title="Filter hanya email status Live">
               <input
                 type="checkbox"
                 v-model="onlyLiveFilter"
                 @change="handleLiveFilterToggle"
                 class="sr-only peer" />
-              <div class="w-7 h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500 relative"></div>
-              <span class="text-xs font-bold text-slate-700 flex items-center gap-1">
+              <div
+                class="w-7 h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500 relative"></div>
+              <span
+                class="text-xs font-bold text-slate-700 flex items-center gap-1">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                 <span>Live Only ({{ liveInLedgerCount }})</span>
               </span>
             </label>
 
             <!-- Switch Radio Toggle: Die Only (DISABLED / DIE) -->
-            <label class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-xl cursor-pointer hover:bg-slate-50 transition shadow-2xs select-none" title="Filter hanya email status DISABLED (DIE)">
+            <label
+              class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-xl cursor-pointer hover:bg-slate-50 transition shadow-2xs select-none"
+              title="Filter hanya email status DISABLED (DIE)">
               <input
                 type="checkbox"
                 v-model="onlyDieFilter"
                 @change="handleDieFilterToggle"
                 class="sr-only peer" />
-              <div class="w-7 h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-rose-500 relative"></div>
-              <span class="text-xs font-bold text-slate-700 flex items-center gap-1">
+              <div
+                class="w-7 h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-rose-500 relative"></div>
+              <span
+                class="text-xs font-bold text-slate-700 flex items-center gap-1">
                 <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
                 <span>Die Only ({{ dieInLedgerCount }})</span>
               </span>
@@ -363,7 +433,12 @@
                     type="button"
                     title="Intip / Sembunyikan Semua Password"
                     class="text-xs text-slate-400 hover:text-blue-600 cursor-pointer ml-1">
-                    <i :class="showAllPasswords ? 'fa-solid fa-eye-slash text-blue-600' : 'fa-solid fa-eye'"></i>
+                    <i
+                      :class="
+                        showAllPasswords
+                          ? 'fa-solid fa-eye-slash text-blue-600'
+                          : 'fa-solid fa-eye'
+                      "></i>
                   </button>
                 </div>
               </th>
@@ -399,16 +474,26 @@
 
               <!-- Compact Password Column (Narrow & Clean) -->
               <td class="py-3.5 px-4 font-mono">
-                <div v-if="row.password" class="flex items-center gap-1.5 max-w-[130px]">
-                  <span class="text-xs font-semibold text-slate-800 truncate font-mono select-all">
-                    {{ isPasswordVisible(row.email) ? row.password : '••••••••' }}
+                <div
+                  v-if="row.password"
+                  class="flex items-center gap-1.5 max-w-[130px]">
+                  <span
+                    class="text-xs font-semibold text-slate-800 truncate font-mono select-all">
+                    {{
+                      isPasswordVisible(row.email) ? row.password : "••••••••"
+                    }}
                   </span>
                   <button
                     @click="toggleShowPassword(row.email)"
                     type="button"
                     class="text-slate-400 hover:text-blue-600 text-xs p-0.5 cursor-pointer flex-shrink-0"
                     title="Intip Password">
-                    <i :class="isPasswordVisible(row.email) ? 'fa-solid fa-eye-slash text-blue-600' : 'fa-solid fa-eye'"></i>
+                    <i
+                      :class="
+                        isPasswordVisible(row.email)
+                          ? 'fa-solid fa-eye-slash text-blue-600'
+                          : 'fa-solid fa-eye'
+                      "></i>
                   </button>
                   <button
                     @click="copyPasswordText(row.password)"
@@ -513,7 +598,9 @@
                       : 'bg-white text-slate-400 border-slate-300 hover:border-emerald-400 hover:text-emerald-600 hover:bg-emerald-50/50'
                   "
                   class="w-8 h-8 rounded-lg text-xs font-black border transition cursor-pointer inline-flex items-center justify-center shadow-2xs">
-                  <span v-if="row.isVerif" class="flex items-center gap-0.5 text-xs font-black">
+                  <span
+                    v-if="row.isVerif"
+                    class="flex items-center gap-0.5 text-xs font-black">
                     <i class="fa-solid fa-check text-[10px]"></i>V
                   </span>
                   <span v-else class="text-xs font-bold font-mono">V</span>
@@ -530,7 +617,9 @@
                       : 'bg-white text-slate-400 border-slate-300 hover:border-amber-400 hover:text-amber-600 hover:bg-amber-50/50'
                   "
                   class="w-8 h-8 rounded-lg text-xs font-black border transition cursor-pointer inline-flex items-center justify-center shadow-2xs">
-                  <span v-if="row.isBanding" class="flex items-center gap-0.5 text-xs font-black">
+                  <span
+                    v-if="row.isBanding"
+                    class="flex items-center gap-0.5 text-xs font-black">
                     <i class="fa-solid fa-check text-[10px]"></i>B
                   </span>
                   <span v-else class="text-xs font-bold font-mono">B</span>
@@ -558,9 +647,16 @@
       </div>
 
       <!-- DataTables Footer: Info Entries & Pagination Controls -->
-      <div v-if="filteredLedger.length > 0" class="px-4 py-3 border-t border-slate-200 bg-slate-50/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+      <div
+        v-if="filteredLedger.length > 0"
+        class="px-4 py-3 border-t border-slate-200 bg-slate-50/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
         <div>
-          Menampilkan <span class="font-bold text-slate-800">{{ startEntryIndex }}</span> sampai <span class="font-bold text-slate-800">{{ endEntryIndex }}</span> dari <span class="font-bold text-slate-800">{{ totalFilteredCount }}</span> total data
+          Menampilkan
+          <span class="font-bold text-slate-800">{{ startEntryIndex }}</span>
+          sampai
+          <span class="font-bold text-slate-800">{{ endEntryIndex }}</span> dari
+          <span class="font-bold text-slate-800">{{ totalFilteredCount }}</span>
+          total data
         </div>
 
         <!-- DataTables Pagination Buttons -->
@@ -577,7 +673,11 @@
             :key="p"
             @click="currentPage = p"
             class="px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer"
-            :class="currentPage === p ? 'bg-blue-600 text-white shadow-2xs' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'">
+            :class="
+              currentPage === p
+                ? 'bg-blue-600 text-white shadow-2xs'
+                : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+            ">
             {{ p }}
           </button>
 
@@ -684,7 +784,10 @@ const liveInLedgerCount = computed(
   () => props.ledger.filter((l) => l.verifyStatus === "live").length,
 );
 const dieInLedgerCount = computed(
-  () => props.ledger.filter((l) => l.verifyStatus === "die" || l.verifyStatus === "disabled").length,
+  () =>
+    props.ledger.filter(
+      (l) => l.verifyStatus === "die" || l.verifyStatus === "disabled",
+    ).length,
 );
 
 const filteredLedger = computed(() => {
@@ -711,12 +814,18 @@ const filteredLedger = computed(() => {
   if (onlyLiveFilter.value) {
     list = list.filter((l) => l.verifyStatus === "live");
   } else if (onlyDieFilter.value) {
-    list = list.filter((l) => l.verifyStatus === "die" || l.verifyStatus === "disabled");
+    list = list.filter(
+      (l) => l.verifyStatus === "die" || l.verifyStatus === "disabled",
+    );
   }
 
   if (searchQuery.value.trim()) {
     const q = searchQuery.value.toLowerCase().trim();
-    list = list.filter((l) => l.email.toLowerCase().includes(q) || (l.password && l.password.toLowerCase().includes(q)));
+    list = list.filter(
+      (l) =>
+        l.email.toLowerCase().includes(q) ||
+        (l.password && l.password.toLowerCase().includes(q)),
+    );
   }
   return list;
 });
@@ -725,9 +834,12 @@ const filteredLedger = computed(() => {
 const pageSize = ref(10);
 const currentPage = ref(1);
 
-watch([searchQuery, activeFilter, pageSize, onlyLiveFilter, onlyDieFilter], () => {
-  currentPage.value = 1;
-});
+watch(
+  [searchQuery, activeFilter, pageSize, onlyLiveFilter, onlyDieFilter],
+  () => {
+    currentPage.value = 1;
+  },
+);
 
 function handleLiveFilterToggle() {
   if (onlyLiveFilter.value) {
@@ -790,7 +902,7 @@ function handleAddEmails() {
     newEmailsText.value,
     defaultSetorStatus.value,
     formattedDate,
-    defaultPassword.value.trim()
+    defaultPassword.value.trim(),
   );
   newEmailsText.value = "";
   defaultPassword.value = "";
@@ -828,7 +940,7 @@ function handleBatchPassword() {
   if (selectedEmails.value.length === 0) return;
   const newPass = prompt(
     `Masukkan password baru untuk ${selectedEmails.value.length} email terpilih:`,
-    ""
+    "",
   );
   if (newPass === null) return;
 
@@ -936,7 +1048,10 @@ function handleRowDateChange(row, dateVal) {
 }
 
 function promptAddPassword(row) {
-  const input = prompt(`Masukkan password untuk ${row.email}:`, row.password || "");
+  const input = prompt(
+    `Masukkan password untuk ${row.email}:`,
+    row.password || "",
+  );
   if (input !== null) {
     handleRowPasswordChange(row, input);
   }
@@ -965,7 +1080,7 @@ function toggleShowAllPasswords() {
 function copyPasswordText(pass) {
   if (!pass) return;
   navigator.clipboard.writeText(pass);
-  alert('Password berhasil disalin!');
+  alert("Password berhasil disalin!");
 }
 
 function deleteFromLedger(email) {
