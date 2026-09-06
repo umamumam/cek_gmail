@@ -274,19 +274,52 @@
               class="px-3.5 py-1.5 rounded-xl text-xs font-bold btn-primary cursor-pointer disabled:opacity-40 shadow-2xs">
               <span>Cek ({{ selectedEmails.length }})</span>
             </button>
+
+            <!-- Bulk Verif & Banding Toggle Buttons -->
+            <button
+              @click="handleBatchVerif"
+              :disabled="selectedEmails.length === 0"
+              class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition cursor-pointer disabled:opacity-40 flex items-center gap-1 shadow-2xs"
+              title="Tandai Verif (V) untuk email terpilih">
+              <span class="text-emerald-600 font-black">✓V</span>
+              <span>({{ selectedEmails.length }})</span>
+            </button>
+            <button
+              @click="handleBatchBanding"
+              :disabled="selectedEmails.length === 0"
+              class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition cursor-pointer disabled:opacity-40 flex items-center gap-1 shadow-2xs"
+              title="Tandai Banding (B) untuk email terpilih">
+              <span class="text-amber-600 font-black">✓B</span>
+              <span>({{ selectedEmails.length }})</span>
+            </button>
           </div>
 
-          <div class="flex items-center gap-2">
-            <!-- Switch Radio Toggle: Live Only (Left of Export Button) -->
+          <div class="flex items-center gap-2 flex-wrap">
+            <!-- Switch Radio Toggle: Live Only -->
             <label class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-xl cursor-pointer hover:bg-slate-50 transition shadow-2xs select-none" title="Filter hanya email status Live">
               <input
                 type="checkbox"
                 v-model="onlyLiveFilter"
+                @change="handleLiveFilterToggle"
                 class="sr-only peer" />
               <div class="w-7 h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500 relative"></div>
               <span class="text-xs font-bold text-slate-700 flex items-center gap-1">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                 <span>Live Only ({{ liveInLedgerCount }})</span>
+              </span>
+            </label>
+
+            <!-- Switch Radio Toggle: Die Only (DISABLED / DIE) -->
+            <label class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-xl cursor-pointer hover:bg-slate-50 transition shadow-2xs select-none" title="Filter hanya email status DISABLED (DIE)">
+              <input
+                type="checkbox"
+                v-model="onlyDieFilter"
+                @change="handleDieFilterToggle"
+                class="sr-only peer" />
+              <div class="w-7 h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-rose-500 relative"></div>
+              <span class="text-xs font-bold text-slate-700 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                <span>Die Only ({{ dieInLedgerCount }})</span>
               </span>
             </label>
 
@@ -467,14 +500,51 @@
                 </span>
               </td>
 
-              <!-- Action Row: Cek Live + Delete -->
+              <!-- Action Row: Verif (V), Banding (B), Cek Live, Delete -->
               <td class="py-3.5 px-4 text-right space-x-1.5 whitespace-nowrap">
+                <!-- Checklist Verif (V) -->
+                <button
+                  @click="toggleRowVerif(row)"
+                  type="button"
+                  title="Verif"
+                  :class="
+                    row.isVerif
+                      ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs ring-2 ring-emerald-200'
+                      : 'bg-white text-slate-400 border-slate-300 hover:border-emerald-400 hover:text-emerald-600 hover:bg-emerald-50/50'
+                  "
+                  class="w-8 h-8 rounded-lg text-xs font-black border transition cursor-pointer inline-flex items-center justify-center shadow-2xs">
+                  <span v-if="row.isVerif" class="flex items-center gap-0.5 text-xs font-black">
+                    <i class="fa-solid fa-check text-[10px]"></i>V
+                  </span>
+                  <span v-else class="text-xs font-bold font-mono">V</span>
+                </button>
+
+                <!-- Checklist Banding (B) -->
+                <button
+                  @click="toggleRowBanding(row)"
+                  type="button"
+                  title="Banding"
+                  :class="
+                    row.isBanding
+                      ? 'bg-amber-500 text-white border-amber-500 shadow-xs ring-2 ring-amber-200'
+                      : 'bg-white text-slate-400 border-slate-300 hover:border-amber-400 hover:text-amber-600 hover:bg-amber-50/50'
+                  "
+                  class="w-8 h-8 rounded-lg text-xs font-black border transition cursor-pointer inline-flex items-center justify-center shadow-2xs">
+                  <span v-if="row.isBanding" class="flex items-center gap-0.5 text-xs font-black">
+                    <i class="fa-solid fa-check text-[10px]"></i>B
+                  </span>
+                  <span v-else class="text-xs font-bold font-mono">B</span>
+                </button>
+
+                <!-- Cek Live Single -->
                 <button
                   @click="$emit('verifySingleInLedger', row.email)"
                   title="Cek Live Check Sekarang"
                   class="w-8 h-8 rounded-lg text-xs btn-primary cursor-pointer inline-flex items-center justify-center shadow-2xs">
                   <i class="fa-solid fa-rotate-right"></i>
                 </button>
+
+                <!-- Hapus Single -->
                 <button
                   @click="deleteFromLedger(row.email)"
                   title="Hapus dari Catatan"
@@ -575,6 +645,7 @@ const selectedEmails = ref([]);
 const showAllPasswords = ref(false);
 const visiblePassMap = ref({});
 const onlyLiveFilter = ref(false);
+const onlyDieFilter = ref(false);
 
 const filterTabs = [
   { label: "NEW", value: "new" },
@@ -612,6 +683,9 @@ const akunOrtuCount = computed(
 const liveInLedgerCount = computed(
   () => props.ledger.filter((l) => l.verifyStatus === "live").length,
 );
+const dieInLedgerCount = computed(
+  () => props.ledger.filter((l) => l.verifyStatus === "die" || l.verifyStatus === "disabled").length,
+);
 
 const filteredLedger = computed(() => {
   let list = props.ledger;
@@ -636,6 +710,8 @@ const filteredLedger = computed(() => {
 
   if (onlyLiveFilter.value) {
     list = list.filter((l) => l.verifyStatus === "live");
+  } else if (onlyDieFilter.value) {
+    list = list.filter((l) => l.verifyStatus === "die" || l.verifyStatus === "disabled");
   }
 
   if (searchQuery.value.trim()) {
@@ -649,9 +725,21 @@ const filteredLedger = computed(() => {
 const pageSize = ref(10);
 const currentPage = ref(1);
 
-watch([searchQuery, activeFilter, pageSize], () => {
+watch([searchQuery, activeFilter, pageSize, onlyLiveFilter, onlyDieFilter], () => {
   currentPage.value = 1;
 });
+
+function handleLiveFilterToggle() {
+  if (onlyLiveFilter.value) {
+    onlyDieFilter.value = false;
+  }
+}
+
+function handleDieFilterToggle() {
+  if (onlyDieFilter.value) {
+    onlyLiveFilter.value = false;
+  }
+}
 
 const totalFilteredCount = computed(() => filteredLedger.value.length);
 
@@ -750,6 +838,62 @@ function handleBatchPassword() {
       emit("updateLedgerRow", {
         ...row,
         password: newPass.trim(),
+        updatedAt: getFormattedDate(),
+      });
+    }
+  });
+}
+
+function toggleRowVerif(row) {
+  emit("updateLedgerRow", {
+    ...row,
+    isVerif: !row.isVerif,
+    updatedAt: getFormattedDate(),
+  });
+}
+
+function toggleRowBanding(row) {
+  emit("updateLedgerRow", {
+    ...row,
+    isBanding: !row.isBanding,
+    updatedAt: getFormattedDate(),
+  });
+}
+
+function handleBatchVerif() {
+  if (selectedEmails.value.length === 0) return;
+  const allVerif = selectedEmails.value.every((emailStr) => {
+    const r = props.ledger.find((l) => l.email === emailStr);
+    return r && r.isVerif;
+  });
+  const targetState = !allVerif;
+
+  selectedEmails.value.forEach((emailStr) => {
+    const row = props.ledger.find((l) => l.email === emailStr);
+    if (row) {
+      emit("updateLedgerRow", {
+        ...row,
+        isVerif: targetState,
+        updatedAt: getFormattedDate(),
+      });
+    }
+  });
+}
+
+function handleBatchBanding() {
+  if (selectedEmails.value.length === 0) return;
+  const allBanding = selectedEmails.value.every((emailStr) => {
+    const r = props.ledger.find((l) => l.email === emailStr);
+    return r && r.isBanding;
+  });
+  const targetState = !allBanding;
+
+  selectedEmails.value.forEach((emailStr) => {
+    const row = props.ledger.find((l) => l.email === emailStr);
+    if (row) {
+      emit("updateLedgerRow", {
+        ...row,
+        isBanding: targetState,
         updatedAt: getFormattedDate(),
       });
     }
@@ -978,6 +1122,8 @@ function exportLedgerExcel() {
     "Keterangan / Status": getKeteranganLabel(l.setorStatus),
     "Tanggal Setor": l.tglSetor || "-",
     "Hasil Live Check": getVerifyStatusLabel(l.verifyStatus),
+    Verif: l.isVerif ? "V" : "-",
+    Banding: l.isBanding ? "B" : "-",
     "Terakhir Diperbarui": l.updatedAt || "-",
   }));
 
@@ -991,6 +1137,8 @@ function exportLedgerExcel() {
     { wch: 18 },
     { wch: 20 },
     { wch: 22 },
+    { wch: 10 },
+    { wch: 10 },
     { wch: 22 },
   ];
 
