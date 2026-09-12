@@ -291,6 +291,23 @@
               </span>
             </label>
 
+            <!-- Switch Toggle: No Verif -->
+            <label
+              class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-xl cursor-pointer hover:bg-slate-50 transition shadow-2xs select-none"
+              title="Filter No Verif (Sembunyikan email yang sudah dicentang verif)">
+              <input
+                type="checkbox"
+                v-model="noVerifFilter"
+                class="sr-only peer" />
+              <div
+                class="w-7 h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-amber-500 relative"></div>
+              <span
+                class="text-xs font-bold text-slate-700 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                <span>No Verif ({{ noVerifInLedgerCount }})</span>
+              </span>
+            </label>
+
             <!-- Export Excel Button -->
             <button
               @click="exportLedgerExcel"
@@ -594,11 +611,18 @@
           </svg>
         </div>
         <h4 class="font-bold text-slate-800 text-sm">
-          Catatan Email Ledger Masih Kosong
+          {{
+            props.ledger.length === 0
+              ? "Catatan Email Ledger Masih Kosong"
+              : "Tidak Ada Data yang Sesuai Filter"
+          }}
         </h4>
         <p class="text-xs text-slate-400 max-w-sm mx-auto">
-          Tambahkan email pada formulir di atas untuk mengelola catatan email
-          disetor / belum disetor beserta tanggal setomya.
+          {{
+            props.ledger.length === 0
+              ? "Tambahkan email pada formulir di atas untuk mengelola catatan email disetor / belum disetor beserta tanggal setomya."
+              : "Coba ubah tab status, reset pencarian, atau nonaktifkan filter Live Only / Die Only / No Verif."
+          }}
         </p>
       </div>
     </div>
@@ -634,6 +658,13 @@ const showAllPasswords = ref(false);
 const visiblePassMap = ref({});
 const onlyLiveFilter = ref(false);
 const onlyDieFilter = ref(false);
+const noVerifFilter = ref(
+  localStorage.getItem("cekgmail_noverif_filter") === "true",
+);
+
+watch(noVerifFilter, (val) => {
+  localStorage.setItem("cekgmail_noverif_filter", val ? "true" : "false");
+});
 
 const filterTabs = [
   { label: "NEW", value: "new" },
@@ -677,6 +708,9 @@ const dieInLedgerCount = computed(
       (l) => l.verifyStatus === "die" || l.verifyStatus === "disabled",
     ).length,
 );
+const noVerifInLedgerCount = computed(
+  () => props.ledger.filter((l) => !l.isVerif).length,
+);
 
 const filteredLedger = computed(() => {
   let list = props.ledger;
@@ -707,6 +741,10 @@ const filteredLedger = computed(() => {
     );
   }
 
+  if (noVerifFilter.value) {
+    list = list.filter((l) => !l.isVerif);
+  }
+
   if (searchQuery.value.trim()) {
     const q = searchQuery.value.toLowerCase().trim();
     list = list.filter(
@@ -723,7 +761,14 @@ const pageSize = ref(10);
 const currentPage = ref(1);
 
 watch(
-  [searchQuery, activeFilter, pageSize, onlyLiveFilter, onlyDieFilter],
+  [
+    searchQuery,
+    activeFilter,
+    pageSize,
+    onlyLiveFilter,
+    onlyDieFilter,
+    noVerifFilter,
+  ],
   () => {
     currentPage.value = 1;
   },
