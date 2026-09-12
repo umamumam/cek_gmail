@@ -304,7 +304,7 @@
               <span
                 class="text-xs font-bold text-slate-700 flex items-center gap-1">
                 <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                <span>No Verif ({{ noVerifInLedgerCount }})</span>
+                <span>No Verif</span>
               </span>
             </label>
 
@@ -707,9 +707,6 @@ const dieInLedgerCount = computed(
     props.ledger.filter(
       (l) => l.verifyStatus === "die" || l.verifyStatus === "disabled",
     ).length,
-);
-const noVerifInLedgerCount = computed(
-  () => props.ledger.filter((l) => !l.isVerif).length,
 );
 
 const filteredLedger = computed(() => {
