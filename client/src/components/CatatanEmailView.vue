@@ -292,22 +292,55 @@
               </span>
             </label>
 
-            <!-- Switch Toggle: No Verif -->
-            <label
-              class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-xl cursor-pointer hover:bg-slate-50 transition shadow-2xs select-none"
-              title="Filter No Verif (Sembunyikan email yang sudah dicentang verif)">
-              <input
-                type="checkbox"
-                v-model="noVerifFilter"
-                class="sr-only peer" />
-              <div
-                class="w-7 h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-amber-500 relative"></div>
-              <span
-                class="text-xs font-bold text-slate-700 flex items-center gap-1">
-                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                <span>No Verif</span>
-              </span>
-            </label>
+            <!-- Segmented 3-Way Switch: Verif (Merah) | Semua | No Verif (Hijau/Aman) -->
+            <div
+              class="inline-flex items-center bg-slate-100 p-1 rounded-xl border border-slate-300 text-xs shadow-2xs select-none"
+              title="Filter status verifikasi: Kiri (Verif/Merah), Tengah (Semua), Kanan (No Verif/Aman)">
+              <button
+                type="button"
+                @click="verifFilterMode = 'verif'"
+                class="px-2.5 py-1 rounded-lg transition-all duration-150 cursor-pointer flex items-center gap-1.5 whitespace-nowrap"
+                :class="
+                  verifFilterMode === 'verif'
+                    ? 'bg-rose-600 text-white font-bold shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 font-medium'
+                "
+                title="Kiri: Filter email yang butuh/terkena Verif (Merah)">
+                <span
+                  class="w-1.5 h-1.5 rounded-full"
+                  :class="verifFilterMode === 'verif' ? 'bg-white' : 'bg-rose-500'"></span>
+                <span>Verif ({{ verifInLedgerCount }})</span>
+              </button>
+
+              <button
+                type="button"
+                @click="verifFilterMode = 'all'"
+                class="px-2.5 py-1 rounded-lg transition-all duration-150 cursor-pointer whitespace-nowrap"
+                :class="
+                  verifFilterMode === 'all'
+                    ? 'bg-white text-slate-900 font-bold shadow-xs border border-slate-200/80'
+                    : 'text-slate-600 hover:text-slate-900 font-medium'
+                "
+                title="Tengah: Tampilkan semua email (Verif & Belum Verif)">
+                <span>Semua</span>
+              </button>
+
+              <button
+                type="button"
+                @click="verifFilterMode = 'no_verif'"
+                class="px-2.5 py-1 rounded-lg transition-all duration-150 cursor-pointer flex items-center gap-1.5 whitespace-nowrap"
+                :class="
+                  verifFilterMode === 'no_verif'
+                    ? 'bg-emerald-600 text-white font-bold shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 font-medium'
+                "
+                title="Kanan: Filter email aman tanpa verif / langsung password (Hijau)">
+                <span
+                  class="w-1.5 h-1.5 rounded-full"
+                  :class="verifFilterMode === 'no_verif' ? 'bg-white' : 'bg-emerald-500'"></span>
+                <span>No Verif ({{ noVerifInLedgerCount }})</span>
+              </button>
+            </div>
 
             <!-- Export Excel Button -->
             <button
@@ -507,11 +540,11 @@
                 <button
                   @click="toggleRowVerif(row)"
                   type="button"
-                  title="Verif"
+                  title="Verif (Kena Verifikasi / Captcha)"
                   :class="
                     row.isVerif
-                      ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs ring-2 ring-emerald-200'
-                      : 'bg-white text-slate-400 border-slate-300 hover:border-emerald-400 hover:text-emerald-600 hover:bg-emerald-50/50'
+                      ? 'bg-rose-600 text-white border-rose-600 shadow-xs ring-2 ring-rose-200'
+                      : 'bg-white text-slate-400 border-slate-300 hover:border-rose-400 hover:text-rose-600 hover:bg-rose-50/50'
                   "
                   class="w-8 h-8 rounded-lg text-xs font-black border transition cursor-pointer inline-flex items-center justify-center shadow-2xs">
                   <span class="text-xs font-bold font-mono">V</span>
@@ -843,12 +876,19 @@ const showAllPasswords = ref(false);
 const visiblePassMap = ref({});
 const onlyLiveFilter = ref(false);
 const onlyDieFilter = ref(false);
-const noVerifFilter = ref(
-  localStorage.getItem("cekgmail_noverif_filter") === "true",
+const verifFilterMode = ref(
+  localStorage.getItem("cekgmail_verif_mode") ||
+    (localStorage.getItem("cekgmail_noverif_filter") === "true"
+      ? "no_verif"
+      : "all"),
 );
 
-watch(noVerifFilter, (val) => {
-  localStorage.setItem("cekgmail_noverif_filter", val ? "true" : "false");
+watch(verifFilterMode, (val) => {
+  localStorage.setItem("cekgmail_verif_mode", val);
+  localStorage.setItem(
+    "cekgmail_noverif_filter",
+    val === "no_verif" ? "true" : "false",
+  );
 });
 
 const filterTabs = [
@@ -893,6 +933,12 @@ const dieInLedgerCount = computed(
       (l) => l.verifyStatus === "die" || l.verifyStatus === "disabled",
     ).length,
 );
+const verifInLedgerCount = computed(
+  () => props.ledger.filter((l) => l.isVerif).length,
+);
+const noVerifInLedgerCount = computed(
+  () => props.ledger.filter((l) => !l.isVerif).length,
+);
 
 const filteredLedger = computed(() => {
   let list = props.ledger;
@@ -923,7 +969,9 @@ const filteredLedger = computed(() => {
     );
   }
 
-  if (noVerifFilter.value) {
+  if (verifFilterMode.value === "verif") {
+    list = list.filter((l) => l.isVerif);
+  } else if (verifFilterMode.value === "no_verif") {
     list = list.filter((l) => !l.isVerif);
   }
 
@@ -949,7 +997,7 @@ watch(
     pageSize,
     onlyLiveFilter,
     onlyDieFilter,
-    noVerifFilter,
+    verifFilterMode,
   ],
   () => {
     currentPage.value = 1;
