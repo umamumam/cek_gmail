@@ -235,11 +235,11 @@
               <span>Cek ({{ selectedEmails.length }})</span>
             </button>
 
-            <!-- Tombol Tampilkan List Email Terpilih -->
+            <!-- Tombol Show List Email Terpilih -->
             <button
               @click="openShowEmailsModal"
               :disabled="selectedEmails.length === 0"
-              class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition cursor-pointer disabled:opacity-40 flex items-center gap-1.5 shadow-2xs"
+              class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition cursor-pointer disabled:opacity-40 flex items-center gap-1.5 shadow-2xs whitespace-nowrap"
               title="Tampilkan daftar email terpilih untuk disalin">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -251,7 +251,7 @@
                 <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
                 <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
               </svg>
-              <span>Tampilkan ({{ selectedEmails.length }})</span>
+              <span>Show</span>
             </button>
           </div>
 
@@ -634,13 +634,13 @@
       class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs transition-opacity"
       @click.self="showEmailsModal = false">
       <div
-        class="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-lg w-full overflow-hidden flex flex-col max-h-[90vh]">
+        class="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-3xl w-full overflow-hidden flex flex-col max-h-[92vh]">
         <!-- Header Modal -->
         <div
           class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
           <div class="flex items-center gap-2.5">
             <div
-              class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100 shadow-2xs">
+              class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100 shadow-2xs">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="w-5 h-5"
@@ -655,36 +655,36 @@
             </div>
             <div>
               <div class="flex items-center gap-2">
-                <h3 class="text-sm font-bold text-slate-900">
+                <h3 class="text-base font-bold text-slate-900">
                   Daftar Email Terpilih
                 </h3>
                 <span
-                  class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-700">
+                  class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-blue-100 text-blue-700">
                   {{ selectedEmails.length }} Email
                 </span>
               </div>
-              <p class="text-[11px] text-slate-500">
-                Langsung siap disalin ke clipboard atau diekstrak.
+              <p class="text-xs text-slate-500">
+                Daftar email siap disalin ke clipboard atau diekstrak secara massal.
               </p>
             </div>
           </div>
           <button
             @click="showEmailsModal = false"
-            class="text-slate-400 hover:text-slate-600 w-8 h-8 rounded-lg flex items-center justify-center hover:bg-slate-100 transition cursor-pointer font-bold text-sm">
+            class="text-slate-400 hover:text-slate-600 w-9 h-9 rounded-xl flex items-center justify-center hover:bg-slate-100 transition cursor-pointer font-bold text-base">
             ✕
           </button>
         </div>
 
         <!-- Format Options Bar -->
         <div
-          class="px-5 py-2.5 bg-slate-50/50 border-b border-slate-100 flex items-center justify-between gap-2 flex-wrap">
-          <div class="flex items-center gap-2 text-xs text-slate-600">
-            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Format:</span>
+          class="px-5 sm:px-6 py-3 bg-slate-50/60 border-b border-slate-100 flex items-center justify-between gap-3 flex-wrap">
+          <div class="flex items-center gap-2.5 text-xs text-slate-600">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Format:</span>
             <div class="inline-flex rounded-lg border border-slate-200 bg-white p-0.5 shadow-2xs">
               <button
                 type="button"
                 @click="copyFormat = 'email_only'"
-                class="px-2.5 py-1 rounded-md text-xs font-bold transition cursor-pointer"
+                class="px-3 py-1 rounded-md text-xs font-bold transition cursor-pointer"
                 :class="
                   copyFormat === 'email_only'
                     ? 'bg-blue-600 text-white shadow-2xs'
@@ -695,7 +695,7 @@
               <button
                 type="button"
                 @click="copyFormat = 'email_pass'"
-                class="px-2.5 py-1 rounded-md text-xs font-bold transition cursor-pointer"
+                class="px-3 py-1 rounded-md text-xs font-bold transition cursor-pointer"
                 :class="
                   copyFormat === 'email_pass'
                     ? 'bg-blue-600 text-white shadow-2xs'
@@ -706,27 +706,28 @@
             </div>
           </div>
 
-          <div class="text-[11px] font-mono font-semibold text-slate-400">
-            {{ selectedEmails.length }} Baris
+          <div class="text-xs font-mono font-semibold text-slate-500">
+            Total: {{ selectedEmails.length }} baris email
           </div>
         </div>
 
         <!-- Body / Textarea -->
-        <div class="p-5 flex-1 overflow-y-auto space-y-2">
+        <div class="p-5 sm:p-6 flex-1 overflow-y-auto space-y-2">
           <textarea
             :value="formattedEmailsText"
             readonly
-            rows="10"
-            class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-mono text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition resize-y select-all leading-relaxed"
+            rows="15"
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 font-mono text-xs sm:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition resize-y select-all leading-relaxed shadow-inner min-h-[340px]"
             @focus="$event.target.select()"></textarea>
-          <div class="flex items-center justify-between text-[11px] text-slate-400">
-            <span>💡 Klik di dalam kotak untuk select all, atau klik tombol di bawah.</span>
+          <div class="flex items-center justify-between text-xs text-slate-400 pt-1">
+            <span>💡 Klik di dalam kotak untuk langsung select all (blok semua teks), atau klik tombol di bawah.</span>
+            <span class="font-mono font-bold text-slate-500">{{ selectedEmails.length }} Akun</span>
           </div>
         </div>
 
         <!-- Footer Actions -->
         <div
-          class="p-4 border-t border-slate-100 flex items-center justify-between bg-slate-50/70">
+          class="p-4 sm:p-5 border-t border-slate-100 flex items-center justify-between bg-slate-50/70">
           <button
             type="button"
             @click="showEmailsModal = false"
