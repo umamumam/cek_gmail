@@ -235,22 +235,23 @@
               <span>Cek ({{ selectedEmails.length }})</span>
             </button>
 
-            <!-- Bulk Verif & Banding Toggle Buttons -->
+            <!-- Tombol Tampilkan List Email Terpilih -->
             <button
-              @click="handleBatchVerif"
+              @click="openShowEmailsModal"
               :disabled="selectedEmails.length === 0"
-              class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition cursor-pointer disabled:opacity-40 flex items-center gap-1 shadow-2xs"
-              title="Tandai Verif (V) untuk email terpilih">
-              <span class="text-emerald-600 font-black">V</span>
-              <span>({{ selectedEmails.length }})</span>
-            </button>
-            <button
-              @click="handleBatchBanding"
-              :disabled="selectedEmails.length === 0"
-              class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition cursor-pointer disabled:opacity-40 flex items-center gap-1 shadow-2xs"
-              title="Tandai Banding (B) untuk email terpilih">
-              <span class="text-amber-600 font-black">B</span>
-              <span>({{ selectedEmails.length }})</span>
+              class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition cursor-pointer disabled:opacity-40 flex items-center gap-1.5 shadow-2xs"
+              title="Tampilkan daftar email terpilih untuk disalin">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-3.5 h-3.5 text-blue-600"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+              </svg>
+              <span>Tampilkan ({{ selectedEmails.length }})</span>
             </button>
           </div>
 
@@ -626,6 +627,152 @@
         </p>
       </div>
     </div>
+
+    <!-- Modal Pop-up: Tampilkan & Salin Daftar Email Terpilih -->
+    <div
+      v-if="showEmailsModal"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs transition-opacity"
+      @click.self="showEmailsModal = false">
+      <div
+        class="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-lg w-full overflow-hidden flex flex-col max-h-[90vh]">
+        <!-- Header Modal -->
+        <div
+          class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
+          <div class="flex items-center gap-2.5">
+            <div
+              class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100 shadow-2xs">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-5 h-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                <path
+                  d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+              </svg>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="text-sm font-bold text-slate-900">
+                  Daftar Email Terpilih
+                </h3>
+                <span
+                  class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-700">
+                  {{ selectedEmails.length }} Email
+                </span>
+              </div>
+              <p class="text-[11px] text-slate-500">
+                Langsung siap disalin ke clipboard atau diekstrak.
+              </p>
+            </div>
+          </div>
+          <button
+            @click="showEmailsModal = false"
+            class="text-slate-400 hover:text-slate-600 w-8 h-8 rounded-lg flex items-center justify-center hover:bg-slate-100 transition cursor-pointer font-bold text-sm">
+            ✕
+          </button>
+        </div>
+
+        <!-- Format Options Bar -->
+        <div
+          class="px-5 py-2.5 bg-slate-50/50 border-b border-slate-100 flex items-center justify-between gap-2 flex-wrap">
+          <div class="flex items-center gap-2 text-xs text-slate-600">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Format:</span>
+            <div class="inline-flex rounded-lg border border-slate-200 bg-white p-0.5 shadow-2xs">
+              <button
+                type="button"
+                @click="copyFormat = 'email_only'"
+                class="px-2.5 py-1 rounded-md text-xs font-bold transition cursor-pointer"
+                :class="
+                  copyFormat === 'email_only'
+                    ? 'bg-blue-600 text-white shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                ">
+                Hanya Email
+              </button>
+              <button
+                type="button"
+                @click="copyFormat = 'email_pass'"
+                class="px-2.5 py-1 rounded-md text-xs font-bold transition cursor-pointer"
+                :class="
+                  copyFormat === 'email_pass'
+                    ? 'bg-blue-600 text-white shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                ">
+                Email:Password
+              </button>
+            </div>
+          </div>
+
+          <div class="text-[11px] font-mono font-semibold text-slate-400">
+            {{ selectedEmails.length }} Baris
+          </div>
+        </div>
+
+        <!-- Body / Textarea -->
+        <div class="p-5 flex-1 overflow-y-auto space-y-2">
+          <textarea
+            :value="formattedEmailsText"
+            readonly
+            rows="10"
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-mono text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition resize-y select-all leading-relaxed"
+            @focus="$event.target.select()"></textarea>
+          <div class="flex items-center justify-between text-[11px] text-slate-400">
+            <span>💡 Klik di dalam kotak untuk select all, atau klik tombol di bawah.</span>
+          </div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div
+          class="p-4 border-t border-slate-100 flex items-center justify-between bg-slate-50/70">
+          <button
+            type="button"
+            @click="showEmailsModal = false"
+            class="px-4 py-2 rounded-xl text-xs font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition cursor-pointer shadow-2xs">
+            Tutup
+          </button>
+
+          <button
+            type="button"
+            @click="copyFormattedEmails"
+            class="px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 shadow-sm"
+            :class="
+              copiedFeedback
+                ? 'bg-emerald-600 text-white'
+                : 'bg-blue-600 hover:bg-blue-700 text-white'
+            ">
+            <template v-if="copiedFeedback">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-4 h-4 text-white"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              <span>Tersalin ke Clipboard!</span>
+            </template>
+            <template v-else>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-4 h-4"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                <path
+                  d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+              </svg>
+              <span>Salin Semua ({{ selectedEmails.length }})</span>
+            </template>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -654,6 +801,43 @@ const customInputDate = ref(new Date().toISOString().slice(0, 10));
 const activeFilter = ref("new");
 const searchQuery = ref("");
 const selectedEmails = ref([]);
+const showEmailsModal = ref(false);
+const copyFormat = ref("email_only");
+const copiedFeedback = ref(false);
+
+const formattedEmailsText = computed(() => {
+  if (selectedEmails.value.length === 0) return "";
+  return selectedEmails.value
+    .map((emailStr) => {
+      if (copyFormat.value === "email_pass") {
+        const row = props.ledger.find((l) => l.email === emailStr);
+        const pass = row && row.password ? row.password : "";
+        return `${emailStr}:${pass}`;
+      }
+      return emailStr;
+    })
+    .join("\n");
+});
+
+function openShowEmailsModal() {
+  if (selectedEmails.value.length === 0) return;
+  copiedFeedback.value = false;
+  showEmailsModal.value = true;
+}
+
+async function copyFormattedEmails() {
+  if (!formattedEmailsText.value) return;
+  try {
+    await navigator.clipboard.writeText(formattedEmailsText.value);
+    copiedFeedback.value = true;
+    setTimeout(() => {
+      copiedFeedback.value = false;
+    }, 2500);
+  } catch (err) {
+    console.error("Gagal menyalin email:", err);
+  }
+}
+
 const showAllPasswords = ref(false);
 const visiblePassMap = ref({});
 const onlyLiveFilter = ref(false);
