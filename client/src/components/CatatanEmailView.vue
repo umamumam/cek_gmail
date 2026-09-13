@@ -256,9 +256,9 @@
           </div>
 
           <div class="flex items-center gap-2 flex-wrap">
-            <!-- Switch Radio Toggle: Live Only -->
+            <!-- Switch Radio Toggle: Live -->
             <label
-              class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-xl cursor-pointer hover:bg-slate-50 transition shadow-2xs select-none"
+              class="flex items-center gap-1 px-2.5 py-1.5 bg-white border border-slate-300 rounded-xl cursor-pointer hover:bg-slate-50 transition shadow-2xs select-none whitespace-nowrap"
               title="Filter hanya email status Live">
               <input
                 type="checkbox"
@@ -266,17 +266,17 @@
                 @change="handleLiveFilterToggle"
                 class="sr-only peer" />
               <div
-                class="w-7 h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500 relative"></div>
+                class="w-6 h-3.5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1.5px] after:left-[1.5px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-2.5 after:w-2.5 after:transition-all peer-checked:bg-emerald-500 relative"></div>
               <span
                 class="text-xs font-bold text-slate-700 flex items-center gap-1">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                <span>Live Only ({{ liveInLedgerCount }})</span>
+                <span>Live ({{ liveInLedgerCount }})</span>
               </span>
             </label>
 
-            <!-- Switch Radio Toggle: Die Only (DISABLED / DIE) -->
+            <!-- Switch Radio Toggle: Die (DISABLED / DIE) -->
             <label
-              class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-xl cursor-pointer hover:bg-slate-50 transition shadow-2xs select-none"
+              class="flex items-center gap-1 px-2.5 py-1.5 bg-white border border-slate-300 rounded-xl cursor-pointer hover:bg-slate-50 transition shadow-2xs select-none whitespace-nowrap"
               title="Filter hanya email status DISABLED (DIE)">
               <input
                 type="checkbox"
@@ -284,28 +284,28 @@
                 @change="handleDieFilterToggle"
                 class="sr-only peer" />
               <div
-                class="w-7 h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-rose-500 relative"></div>
+                class="w-6 h-3.5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1.5px] after:left-[1.5px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-2.5 after:w-2.5 after:transition-all peer-checked:bg-rose-500 relative"></div>
               <span
                 class="text-xs font-bold text-slate-700 flex items-center gap-1">
                 <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
-                <span>Die Only ({{ dieInLedgerCount }})</span>
+                <span>Die ({{ dieInLedgerCount }})</span>
               </span>
             </label>
 
-            <!-- Segmented 3-Way Switch: Verif (Merah) | Semua | No Verif (Hijau/Aman) -->
+            <!-- Segmented 3-Way Switch: Verif | All | Clean -->
             <div
-              class="inline-flex items-center bg-slate-100 p-1 rounded-xl border border-slate-300 text-xs shadow-2xs select-none"
-              title="Filter status verifikasi: Kiri (Verif/Merah), Tengah (Semua), Kanan (No Verif/Aman)">
+              class="inline-flex items-center bg-slate-100 p-0.5 rounded-xl border border-slate-300 text-xs shadow-2xs select-none"
+              title="Filter status verifikasi: Verif (Merah), All (Semua), Clean (Aman/Hijau)">
               <button
                 type="button"
                 @click="verifFilterMode = 'verif'"
-                class="px-2.5 py-1 rounded-lg transition-all duration-150 cursor-pointer flex items-center gap-1.5 whitespace-nowrap"
+                class="px-2 py-1 rounded-lg transition-all duration-150 cursor-pointer flex items-center gap-1 whitespace-nowrap"
                 :class="
                   verifFilterMode === 'verif'
                     ? 'bg-rose-600 text-white font-bold shadow-xs'
                     : 'text-slate-600 hover:text-slate-900 font-medium'
                 "
-                title="Kiri: Filter email yang butuh/terkena Verif (Merah)">
+                title="Hanya tampilkan email yang butuh/terkena Verif">
                 <span
                   class="w-1.5 h-1.5 rounded-full"
                   :class="verifFilterMode === 'verif' ? 'bg-white' : 'bg-rose-500'"></span>
@@ -315,30 +315,30 @@
               <button
                 type="button"
                 @click="verifFilterMode = 'all'"
-                class="px-2.5 py-1 rounded-lg transition-all duration-150 cursor-pointer whitespace-nowrap"
+                class="px-2 py-1 rounded-lg transition-all duration-150 cursor-pointer whitespace-nowrap"
                 :class="
                   verifFilterMode === 'all'
                     ? 'bg-white text-slate-900 font-bold shadow-xs border border-slate-200/80'
                     : 'text-slate-600 hover:text-slate-900 font-medium'
                 "
-                title="Tengah: Tampilkan semua email (Verif & Belum Verif)">
-                <span>Semua</span>
+                title="Tampilkan semua (Verif & Clean)">
+                <span>All</span>
               </button>
 
               <button
                 type="button"
                 @click="verifFilterMode = 'no_verif'"
-                class="px-2.5 py-1 rounded-lg transition-all duration-150 cursor-pointer flex items-center gap-1.5 whitespace-nowrap"
+                class="px-2 py-1 rounded-lg transition-all duration-150 cursor-pointer flex items-center gap-1 whitespace-nowrap"
                 :class="
                   verifFilterMode === 'no_verif'
                     ? 'bg-emerald-600 text-white font-bold shadow-xs'
                     : 'text-slate-600 hover:text-slate-900 font-medium'
                 "
-                title="Kanan: Filter email aman tanpa verif / langsung password (Hijau)">
+                title="Hanya tampilkan email clean (tanpa captcha/aman)">
                 <span
                   class="w-1.5 h-1.5 rounded-full"
                   :class="verifFilterMode === 'no_verif' ? 'bg-white' : 'bg-emerald-500'"></span>
-                <span>No Verif ({{ noVerifInLedgerCount }})</span>
+                <span>Clean ({{ noVerifInLedgerCount }})</span>
               </button>
             </div>
 
@@ -924,42 +924,50 @@ const sudahSetorCount = computed(
 const akunOrtuCount = computed(
   () => props.ledger.filter((l) => l.setorStatus === "akun_ortu").length,
 );
-const liveInLedgerCount = computed(
-  () => props.ledger.filter((l) => l.verifyStatus === "live").length,
-);
-const dieInLedgerCount = computed(
-  () =>
-    props.ledger.filter(
-      (l) => l.verifyStatus === "die" || l.verifyStatus === "disabled",
-    ).length,
-);
-const verifInLedgerCount = computed(
-  () => props.ledger.filter((l) => l.isVerif).length,
-);
-const noVerifInLedgerCount = computed(
-  () => props.ledger.filter((l) => !l.isVerif).length,
-);
 
-const filteredLedger = computed(() => {
+// Data subset sesuai tab aktif yang dipilih
+const activeTabLedger = computed(() => {
   let list = props.ledger;
   if (activeFilter.value === "new") {
-    list = list.filter(
+    return list.filter(
       (l) =>
         l.setorStatus === "new" ||
         l.setorStatus === "belum_disetor" ||
         !l.setorStatus,
     );
   } else if (activeFilter.value === "siap_setor") {
-    list = list.filter((l) => l.setorStatus === "siap_setor");
+    return list.filter((l) => l.setorStatus === "siap_setor");
   } else if (activeFilter.value === "setor_tgl") {
-    list = list.filter((l) => l.setorStatus === "setor_tgl");
+    return list.filter((l) => l.setorStatus === "setor_tgl");
   } else if (activeFilter.value === "sudah_setor") {
-    list = list.filter(
+    return list.filter(
       (l) => l.setorStatus === "sudah_setor" || l.setorStatus === "disetor",
     );
   } else if (activeFilter.value === "akun_ortu") {
-    list = list.filter((l) => l.setorStatus === "akun_ortu");
+    return list.filter((l) => l.setorStatus === "akun_ortu");
   }
+  return list;
+});
+
+// Hitung Live, Die, Verif, Clean dari data di tab aktif yang dipilih
+const liveInLedgerCount = computed(
+  () => activeTabLedger.value.filter((l) => l.verifyStatus === "live").length,
+);
+const dieInLedgerCount = computed(
+  () =>
+    activeTabLedger.value.filter(
+      (l) => l.verifyStatus === "die" || l.verifyStatus === "disabled",
+    ).length,
+);
+const verifInLedgerCount = computed(
+  () => activeTabLedger.value.filter((l) => l.isVerif).length,
+);
+const noVerifInLedgerCount = computed(
+  () => activeTabLedger.value.filter((l) => !l.isVerif).length,
+);
+
+const filteredLedger = computed(() => {
+  let list = activeTabLedger.value;
 
   if (onlyLiveFilter.value) {
     list = list.filter((l) => l.verifyStatus === "live");
