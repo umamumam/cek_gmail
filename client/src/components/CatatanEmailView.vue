@@ -134,37 +134,55 @@
       </div>
     </div>
 
-    <!-- Compact Bulk Status Input Card (Mirip Cek Email) -->
-    <div class="saas-card p-4 sm:p-5 space-y-3">
-      <!-- Header Ribbon Badge & Actions -->
-      <div class="flex items-center justify-between">
-        <!-- Ribbon Badge -->
-        <div
-          class="flex items-center gap-2.5 bg-slate-900 text-white px-3.5 py-1.5 rounded-r-xl rounded-l-md text-xs font-bold font-mono shadow-xs">
-          <span>Ubah Status Massal ({{ bulkInputCount }})</span>
+    <!-- Collapsible Bulk Status Input Card (Bisa di-hide / show agar tidak menuhin tampilan) -->
+    <div class="saas-card overflow-hidden transition-all duration-200">
+      <!-- Header Bar: Tombol Toggle Utama -->
+      <div
+        class="px-4 py-3 sm:px-5 flex items-center justify-between transition select-none"
+        :class="isBulkOpen ? 'border-b border-slate-200/80 bg-slate-50/60' : 'bg-white hover:bg-slate-50/80'">
+        
+        <!-- Tombol Ubah Status Massal (yang bisa menghide/show tampilan) -->
+        <div class="flex items-center gap-3">
           <button
-            v-if="bulkText"
-            @click="bulkText = ''"
+            @click="isBulkOpen = !isBulkOpen"
             type="button"
-            class="text-slate-400 hover:text-rose-400 transition cursor-pointer p-0.5"
-            title="Bersihkan Input">
+            class="flex items-center gap-2.5 bg-slate-900 hover:bg-slate-800 active:scale-98 text-white px-3.5 py-1.5 rounded-r-xl rounded-l-md text-xs font-bold font-mono shadow-xs transition cursor-pointer group"
+            :title="isBulkOpen ? 'Klik untuk sembunyikan form input massal' : 'Klik untuk tampilkan form input massal'">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="w-3.5 h-3.5"
+              class="w-3.5 h-3.5 text-emerald-400"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               stroke-width="2">
-              <polyline points="3 6 5 6 21 6" />
-              <path
-                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+              <path d="M12 20h9" />
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+            </svg>
+            <span>Ubah Status Massal ({{ bulkInputCount }})</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-3.5 h-3.5 text-slate-400 group-hover:text-white transition-transform duration-200"
+              :class="isBulkOpen ? 'rotate-180' : ''"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5">
+              <polyline points="6 9 12 15 18 9" />
             </svg>
           </button>
+
+          <span
+            @click="isBulkOpen = !isBulkOpen"
+            class="text-xs text-slate-500 hover:text-slate-800 cursor-pointer font-medium hidden sm:inline transition">
+            {{ isBulkOpen ? 'Klik untuk sembunyikan form' : 'Klik untuk membuka input email massal' }}
+          </span>
         </div>
 
-        <div class="flex items-center gap-3">
-          <!-- Sample Load Button -->
+        <!-- Right Side: Actions (ketika terbuka) atau tombol Toggle -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <!-- Sample Load Button (hanya saat form terbuka) -->
           <button
+            v-if="isBulkOpen"
             @click="loadSampleBulkEmails"
             type="button"
             class="text-xs font-bold text-blue-600 hover:text-blue-700 hover:underline cursor-pointer flex items-center gap-1">
@@ -182,14 +200,15 @@
               <line x1="16" y1="17" x2="8" y2="17" />
               <polyline points="10 9 9 9 8 9" />
             </svg>
-            <span>Muat Sampel Email</span>
+            <span class="hidden sm:inline">Muat Sampel Email</span>
           </button>
 
-          <!-- Paste from clipboard button -->
+          <!-- Paste from clipboard button (hanya saat form terbuka) -->
           <button
+            v-if="isBulkOpen"
             @click="pasteFromClipboard"
             type="button"
-            class="text-xs font-bold text-slate-600 hover:text-blue-600 cursor-pointer hidden sm:flex items-center gap-1 transition">
+            class="text-xs font-bold text-slate-600 hover:text-blue-600 cursor-pointer hidden md:flex items-center gap-1 transition">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="w-3.5 h-3.5 text-slate-500"
@@ -203,156 +222,197 @@
             </svg>
             <span>Paste Clipboard</span>
           </button>
-        </div>
-      </div>
 
-      <!-- Compact Textarea with Drag & Drop -->
-      <div
-        @dragover.prevent="isDraggingBulk = true"
-        @dragleave.prevent="isDraggingBulk = false"
-        @drop.prevent="handleBulkDrop"
-        class="relative border-2 border-dashed rounded-xl transition-all duration-200"
-        :class="
-          isDraggingBulk
-            ? 'border-blue-600 bg-blue-50/60'
-            : 'border-slate-300 hover:border-slate-400 bg-slate-50/40'
-        ">
-        <textarea
-          v-model="bulkText"
-          rows="5"
-          placeholder="Tempel atau ketik daftar email di sini untuk ubah status secara massal...&#10;Format apa saja (1 per baris, email|password, dll)&#10;Contoh:&#10;alex.developer@gmail.com&#10;support.team@gmail.com|pass123"
-          class="w-full bg-transparent p-3.5 text-xs font-mono text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white/80 rounded-xl transition resize-y leading-relaxed"></textarea>
-
-        <!-- Drop Overlay Hint -->
-        <div
-          v-if="isDraggingBulk"
-          class="absolute inset-0 bg-blue-600/10 backdrop-blur-2xs rounded-xl flex items-center justify-center text-blue-700 font-bold text-xs pointer-events-none">
-          Lepaskan file .txt / .csv di sini
-        </div>
-      </div>
-
-      <!-- Action Controls Bar -->
-      <div
-        class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
-        <!-- Left: Upload Button & Auto-add Checkbox -->
-        <div class="flex items-center gap-3 w-full sm:w-auto flex-wrap">
-          <!-- Hidden File Input -->
-          <input
-            type="file"
-            ref="bulkFileInputRef"
-            accept=".txt,.csv"
-            @change="handleBulkFileUpload"
-            class="hidden" />
-
-          <!-- Upload File Button -->
+          <!-- Clear text button (hanya saat form terbuka dan ada teks) -->
           <button
-            @click="triggerBulkFileSelect"
+            v-if="isBulkOpen && bulkText"
+            @click="bulkText = ''"
             type="button"
-            class="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-semibold bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 transition cursor-pointer flex items-center justify-center gap-1.5 shadow-2xs">
+            class="text-xs text-rose-500 hover:text-rose-700 font-semibold cursor-pointer flex items-center gap-1 p-1">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="w-4 h-4 text-slate-500"
+              class="w-3.5 h-3.5"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="17 8 12 3 7 8" />
-              <line x1="12" y1="3" x2="12" y2="15" />
+              <polyline points="3 6 5 6 21 6" />
+              <path
+                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
             </svg>
-            <span>Upload .txt / .csv</span>
+            <span>Bersihkan</span>
           </button>
 
-          <!-- Checkbox: Otomatis Tambah jika belum ada -->
-          <label
-            class="flex items-center gap-1.5 text-xs text-slate-600 cursor-pointer select-none">
-            <input
-              type="checkbox"
-              v-model="autoAddIfNotFound"
-              class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer" />
-            <span>Otomatis simpan jika belum ada di database</span>
-          </label>
-        </div>
-
-        <!-- Right: Status Target Selector + Tombol Ubah Sudah Setor -->
-        <div
-          class="flex items-center gap-2.5 w-full sm:w-auto justify-end flex-wrap">
-          <!-- Target Status Dropdown (Default: Sudah Setor) -->
-          <div class="flex items-center gap-1.5">
-            <span class="text-xs text-slate-500 font-medium hidden sm:inline">Ubah ke:</span>
-            <select
-              v-model="selectedBulkTargetStatus"
-              class="px-3 py-2 rounded-xl text-xs font-bold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition cursor-pointer focus:outline-none shadow-2xs">
-              <option value="sudah_setor">✅ Sudah Setor</option>
-              <option value="siap_setor">🔵 Siap Setor</option>
-              <option value="setor_tgl">📅 Setor Tgl...</option>
-              <option value="akun_ortu">👨‍👩‍👧 Akun Ortu</option>
-              <option value="new">⚪ NEW (Kosong)</option>
-            </select>
-          </div>
-
-          <!-- Date Picker when Setor Tgl selected -->
-          <input
-            v-if="selectedBulkTargetStatus === 'setor_tgl'"
-            type="date"
-            v-model="bulkCustomDate"
-            class="px-2.5 py-1.5 rounded-xl text-xs bg-white border border-slate-300 font-mono text-slate-700 shadow-2xs focus:outline-none focus:border-blue-500" />
-
-          <!-- Main Button: Ubah Sudah Setor (Emerald) -->
+          <!-- Toggle Button Text: Buka / Sembunyikan -->
           <button
-            v-if="selectedBulkTargetStatus === 'sudah_setor'"
-            @click="executeBulkStatusChange('sudah_setor')"
-            :disabled="bulkInputCount === 0"
+            @click="isBulkOpen = !isBulkOpen"
             type="button"
-            class="w-full sm:w-auto min-w-[165px] px-5 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 active:scale-98 text-white transition cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm">
+            class="text-xs font-bold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200/80 px-2.5 py-1 rounded-lg transition cursor-pointer flex items-center gap-1">
+            <span>{{ isBulkOpen ? 'Sembunyikan' : 'Buka Form' }}</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="w-4 h-4"
+              class="w-3 h-3 transition-transform duration-200"
+              :class="isBulkOpen ? 'rotate-180' : ''"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               stroke-width="2.5">
-              <polyline points="20 6 9 17 4 12" />
+              <polyline points="6 9 12 15 18 9" />
             </svg>
-            <span>Ubah Sudah Setor</span>
-            <span
-              v-if="bulkInputCount > 0"
-              class="ml-0.5 bg-emerald-700/90 text-[10px] font-mono px-1.5 py-0.5 rounded-md">
-              {{ bulkInputCount }}
-            </span>
           </button>
+        </div>
+      </div>
 
-          <!-- Alternative Button when other status is selected -->
-          <button
-            v-else
-            @click="executeBulkStatusChange(selectedBulkTargetStatus)"
-            :disabled="bulkInputCount === 0"
-            type="button"
-            class="w-full sm:w-auto min-w-[165px] px-5 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-700 active:scale-98 text-white transition cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-4 h-4"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2">
-              <path d="M12 20h9" />
-              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-            </svg>
-            <span>Ubah Status</span>
-            <span
-              v-if="bulkInputCount > 0"
-              class="ml-0.5 bg-blue-700/90 text-[10px] font-mono px-1.5 py-0.5 rounded-md">
-              {{ bulkInputCount }}
-            </span>
-          </button>
+      <!-- Collapsible Body (Textarea & Controls) -->
+      <div v-show="isBulkOpen" class="p-4 sm:p-5 space-y-3 animate-fadeIn">
+        <!-- Compact Textarea with Drag & Drop -->
+        <div
+          @dragover.prevent="isDraggingBulk = true"
+          @dragleave.prevent="isDraggingBulk = false"
+          @drop.prevent="handleBulkDrop"
+          class="relative border-2 border-dashed rounded-xl transition-all duration-200"
+          :class="
+            isDraggingBulk
+              ? 'border-blue-600 bg-blue-50/60'
+              : 'border-slate-300 hover:border-slate-400 bg-slate-50/40'
+          ">
+          <textarea
+            v-model="bulkText"
+            rows="5"
+            placeholder="Tempel atau ketik daftar email di sini untuk ubah status secara massal...&#10;Format apa saja (1 per baris, email|password, dll)&#10;Contoh:&#10;alex.developer@gmail.com&#10;support.team@gmail.com|pass123"
+            class="w-full bg-transparent p-3.5 text-xs font-mono text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white/80 rounded-xl transition resize-y leading-relaxed"></textarea>
+
+          <!-- Drop Overlay Hint -->
+          <div
+            v-if="isDraggingBulk"
+            class="absolute inset-0 bg-blue-600/10 backdrop-blur-2xs rounded-xl flex items-center justify-center text-blue-700 font-bold text-xs pointer-events-none">
+            Lepaskan file .txt / .csv di sini
+          </div>
+        </div>
+
+        <!-- Action Controls Bar -->
+        <div
+          class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
+          <!-- Left: Upload Button & Auto-add Checkbox -->
+          <div class="flex items-center gap-3 w-full sm:w-auto flex-wrap">
+            <!-- Hidden File Input -->
+            <input
+              type="file"
+              ref="bulkFileInputRef"
+              accept=".txt,.csv"
+              @change="handleBulkFileUpload"
+              class="hidden" />
+
+            <!-- Upload File Button -->
+            <button
+              @click="triggerBulkFileSelect"
+              type="button"
+              class="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-semibold bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 transition cursor-pointer flex items-center justify-center gap-1.5 shadow-2xs">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-4 h-4 text-slate-500"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+              <span>Upload .txt / .csv</span>
+            </button>
+
+            <!-- Checkbox: Otomatis Tambah jika belum ada -->
+            <label
+              class="flex items-center gap-1.5 text-xs text-slate-600 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                v-model="autoAddIfNotFound"
+                class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer" />
+              <span>Otomatis simpan jika belum ada di database</span>
+            </label>
+          </div>
+
+          <!-- Right: Status Target Selector + Tombol Ubah Sudah Setor -->
+          <div
+            class="flex items-center gap-2.5 w-full sm:w-auto justify-end flex-wrap">
+            <!-- Target Status Dropdown (Default: Sudah Setor) -->
+            <div class="flex items-center gap-1.5">
+              <span class="text-xs text-slate-500 font-medium hidden sm:inline">Ubah ke:</span>
+              <select
+                v-model="selectedBulkTargetStatus"
+                class="px-3 py-2 rounded-xl text-xs font-bold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition cursor-pointer focus:outline-none shadow-2xs">
+                <option value="sudah_setor">✅ Sudah Setor</option>
+                <option value="siap_setor">🔵 Siap Setor</option>
+                <option value="setor_tgl">📅 Setor Tgl...</option>
+                <option value="akun_ortu">👨‍👩‍👧 Akun Ortu</option>
+                <option value="new">⚪ NEW (Kosong)</option>
+              </select>
+            </div>
+
+            <!-- Date Picker when Setor Tgl selected -->
+            <input
+              v-if="selectedBulkTargetStatus === 'setor_tgl'"
+              type="date"
+              v-model="bulkCustomDate"
+              class="px-2.5 py-1.5 rounded-xl text-xs bg-white border border-slate-300 font-mono text-slate-700 shadow-2xs focus:outline-none focus:border-blue-500" />
+
+            <!-- Main Button: Ubah Sudah Setor (Emerald) -->
+            <button
+              v-if="selectedBulkTargetStatus === 'sudah_setor'"
+              @click="executeBulkStatusChange('sudah_setor')"
+              :disabled="bulkInputCount === 0"
+              type="button"
+              class="w-full sm:w-auto min-w-[165px] px-5 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 active:scale-98 text-white transition cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-4 h-4"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              <span>Ubah Sudah Setor</span>
+              <span
+                v-if="bulkInputCount > 0"
+                class="ml-0.5 bg-emerald-700/90 text-[10px] font-mono px-1.5 py-0.5 rounded-md">
+                {{ bulkInputCount }}
+              </span>
+            </button>
+
+            <!-- Alternative Button when other status is selected -->
+            <button
+              v-else
+              @click="executeBulkStatusChange(selectedBulkTargetStatus)"
+              :disabled="bulkInputCount === 0"
+              type="button"
+              class="w-full sm:w-auto min-w-[165px] px-5 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-700 active:scale-98 text-white transition cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-4 h-4"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2">
+                <path d="M12 20h9" />
+                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+              </svg>
+              <span>Ubah Status</span>
+              <span
+                v-if="bulkInputCount > 0"
+                class="ml-0.5 bg-blue-700/90 text-[10px] font-mono px-1.5 py-0.5 rounded-md">
+                {{ bulkInputCount }}
+              </span>
+            </button>
+          </div>
         </div>
       </div>
 
       <!-- Execution Feedback Banner -->
       <div
         v-if="bulkExecutionResult"
-        class="flex items-center justify-between p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 animate-fadeIn">
+        class="m-3 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 flex items-center justify-between animate-fadeIn">
         <div class="flex items-center gap-2 font-medium">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -1070,12 +1130,17 @@ const emit = defineEmits([
 ]);
 
 const bulkText = ref("");
+const isBulkOpen = ref(localStorage.getItem("cekgmail_bulk_open") === "true");
 const selectedBulkTargetStatus = ref("sudah_setor");
 const bulkCustomDate = ref(new Date().toISOString().slice(0, 10));
 const autoAddIfNotFound = ref(true);
 const bulkFileInputRef = ref(null);
 const isDraggingBulk = ref(false);
 const bulkExecutionResult = ref(null);
+
+watch(isBulkOpen, (val) => {
+  localStorage.setItem("cekgmail_bulk_open", val ? "true" : "false");
+});
 const activeFilter = ref("new");
 const searchQuery = ref("");
 const selectedEmails = ref([]);
