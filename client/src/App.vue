@@ -115,7 +115,8 @@
             @checkSelectedLedger="checkSelectedLedger"
             @verifySingleInLedger="verifySingleInLedger"
             @clearLedger="clearLedger"
-            @bulkSetor="bulkSetorLedger" />
+            @bulkSetor="bulkSetorLedger"
+            @bulkUpdateStatus="bulkUpdateStatusLedger" />
 
           <!-- Tab 5: Daftar Password & Vault -->
           <PasswordVaultView
@@ -684,7 +685,7 @@ function bulkSetorLedger(emailsArray, dateFormatted) {
   emailsArray.forEach(emailStr => {
     const idx = emailLedger.value.findIndex(l => l.email === emailStr);
     if (idx !== -1) {
-      emailLedger.value[idx].setorStatus = 'disetor';
+      emailLedger.value[idx].setorStatus = 'sudah_setor';
       emailLedger.value[idx].tglSetor = dateFormatted;
       emailLedger.value[idx].updatedAt = dateFormatted;
       updatedCount++;
@@ -692,6 +693,62 @@ function bulkSetorLedger(emailsArray, dateFormatted) {
   });
   saveState();
   showToast(`${updatedCount} email berhasil disetorkan pada tanggal ${dateFormatted}.`);
+}
+
+function bulkUpdateStatusLedger({ items, newStatus = 'sudah_setor', customDate = null, autoAdd = true }) {
+  let updatedCount = 0;
+  let addedCount = 0;
+  const nowStr = getFormattedDate();
+  const tgl = (newStatus === 'setor_tgl')
+    ? (customDate || nowStr)
+    : (newStatus === 'sudah_setor' || newStatus === 'disetor')
+      ? (customDate || nowStr)
+      : null;
+
+  items.forEach(item => {
+    const emailStr = (typeof item === 'string' ? item : item.email).toLowerCase().trim();
+    const pass = typeof item === 'object' && item.password ? item.password.trim() : '';
+    if (!emailStr || !emailStr.includes('@')) return;
+
+    const idx = emailLedger.value.findIndex(l => l.email === emailStr);
+    if (idx !== -1) {
+      emailLedger.value[idx].setorStatus = newStatus;
+      if (tgl !== null) {
+        emailLedger.value[idx].tglSetor = tgl;
+      }
+      if (pass) {
+        emailLedger.value[idx].password = pass;
+      }
+      emailLedger.value[idx].updatedAt = nowStr;
+      updatedCount++;
+    } else if (autoAdd) {
+      emailLedger.value.unshift({
+        email: emailStr,
+        password: pass,
+        setorStatus: newStatus,
+        tglSetor: tgl,
+        verifyStatus: 'unchecked',
+        updatedAt: nowStr
+      });
+      addedCount++;
+    }
+  });
+
+  saveState();
+  const statusLabels = {
+    sudah_setor: 'Sudah Setor',
+    disetor: 'Sudah Setor',
+    siap_setor: 'Siap Setor',
+    setor_tgl: 'Setor Tgl',
+    akun_ortu: 'Akun Ortu',
+    new: 'NEW'
+  };
+  const label = statusLabels[newStatus] || newStatus;
+  let msg = `${updatedCount} email berhasil diubah menjadi "${label}".`;
+  if (addedCount > 0) {
+    msg += ` (${addedCount} email baru ditambahkan ke Catatan).`;
+  }
+  showToast(msg);
 }
 
 function updateLedgerRow(updatedRow) {
